@@ -1,0 +1,22 @@
+{
+  "description": "今日角色小程序项目配置",
+  "miniprogramRoot": "miniprogram/",
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "today-role",
+  "libVersion": "3.7.12",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useCompilerPlugins": ["typescript"],
+    "minifyWXSS": true
+  },
+  "condition": {}
+}

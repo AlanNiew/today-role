@@ -4,6 +4,10 @@ node_modules/
 __pycache__/
 *.pyc
 .cache/
+.tmp-test/
+coverage/
+miniprogram/**/*.js
+miniprogram/**/*.js.map
 
 # 构建产物
 dist/

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2020"],
+    "types": ["node"],
+    "outDir": ".tmp-test",
+    "rootDir": "."
+  },
+  "include": ["miniprogram/core/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", ".tmp-test"]
+}

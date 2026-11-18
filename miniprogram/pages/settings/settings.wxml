@@ -1,0 +1,71 @@
+<view class="page">
+  <view class="section-title">MY DATA</view>
+  <view class="card">
+    <view class="row-between">
+      <view>
+        <view class="muted small">累计记录</view>
+        <view style="font-size: 52rpx; font-weight: 700; color: #2f4b38;">{{recordedDays}} 天</view>
+      </view>
+      <view class="tag {{isPro ? 'tag-warm' : ''}}">{{planText}}</view>
+    </view>
+    <view class="divider"></view>
+    <view class="row-between muted small">
+      <view>本月 {{currentMonthDays}} 天</view>
+      <view>共 {{totalEntries}} 条</view>
+      <view>始于 {{firstDateLabel}}</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">数据与隐私</view>
+    <view class="muted" style="margin-bottom: 20rpx;">
+      记录只保存在本机微信存储，不上传、不登录、不采集微信身份。你可以随时导出或彻底删除。
+    </view>
+    <button class="btn btn-ghost" loading="{{exporting}}" bindtap="onExport">导出 JSON（复制到剪贴板）</button>
+    <button class="btn btn-danger" style="margin-top: 16rpx;" loading="{{clearing}}" bindtap="onClearAll">清空全部数据</button>
+    <view class="muted small" style="margin-top: 16rpx;">清空会删除记录、周/月缓存和 Mock 权益，无法恢复。导出文件由你自己保管。</view>
+  </view>
+
+  <view class="card">
+    <view class="row-between" style="margin-bottom: 12rpx;">
+      <view class="card-title" style="margin-bottom: 0;">权益</view>
+      <view class="tag">{{planText}}</view>
+    </view>
+    <view class="muted" style="margin-bottom: 20rpx;">
+      免费版包含每日记录、今日碎片、周快照和月卡基础版。Mock Pro 仅用于开发测试，不接微信支付。
+    </view>
+    <button class="btn btn-ghost" bindtap="onOpenPaywall">查看 / 切换 Mock Pro</button>
+  </view>
+
+  <view class="card">
+    <view class="card-title">去看看</view>
+    <view class="row" style="gap: 16rpx;">
+      <button class="btn btn-ghost" style="flex: 1;" bindtap="onOpenWeekly">本周快照</button>
+      <button class="btn btn-ghost" style="flex: 1;" bindtap="onOpenMonthly">本月角色卡</button>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">隐私说明</view>
+    <view class="muted small">· 不申请登录，不获取头像、昵称、手机号或位置。</view>
+    <view class="muted small">· 不发起网络请求；规则生成全部在本地完成。</view>
+    <view class="muted small">· 一句话备注不会用于生成文案，也不会出现在任何分享内容中。</view>
+    <view class="muted small">· 导出由你主动触发，JSON 只复制到剪贴板 / 本机临时文件。</view>
+    <view class="muted small">· 内容只描述记录中的数量与共现，不做定性判断，也不构成医疗建议。</view>
+  </view>
+
+  <view class="card">
+    <view class="row-between">
+      <view class="card-title" style="margin-bottom: 0;">开发调试</view>
+      <view class="tag tag-warm">会覆盖记录</view>
+    </view>
+    <view class="muted small" style="margin: 12rpx 0 20rpx;">
+      载入最近 45 天的演示数据，便于验证周快照、月卡和 Mock Pro 历史对比。
+    </view>
+    <button class="btn btn-ghost" loading="{{seeding}}" bindtap="onSeedDemo">载入演示数据</button>
+  </view>
+
+  <view class="footer-note">
+    今日角色 v0.1.0 · 数据 schema 1 · 仅供自我观察，不构成医疗建议。
+  </view>
+</view>

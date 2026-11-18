@@ -1,0 +1,273 @@
+page {
+  background: #f4f2ec;
+  color: #2b2f2b;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 30rpx;
+  line-height: 1.6;
+}
+
+.page {
+  box-sizing: border-box;
+  padding: 28rpx 28rpx 72rpx;
+}
+
+.card {
+  background: #fffdf8;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 28rpx rgba(47, 64, 52, 0.06);
+  box-sizing: border-box;
+  margin-bottom: 24rpx;
+  padding: 32rpx;
+}
+
+.card-title {
+  color: #2b2f2b;
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.section-title {
+  color: #6d746c;
+  font-size: 25rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  margin: 8rpx 4rpx 16rpx;
+}
+
+.muted {
+  color: #7d837b;
+  font-size: 26rpx;
+}
+
+.small {
+  font-size: 24rpx;
+}
+
+.center {
+  text-align: center;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+}
+
+.row-between {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stack-8 > * + * {
+  margin-top: 8rpx;
+}
+
+.stack-16 > * + * {
+  margin-top: 16rpx;
+}
+
+.divider {
+  background: #eeebe2;
+  height: 1rpx;
+  margin: 24rpx 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.chip {
+  background: #f7f4ec;
+  border: 2rpx solid transparent;
+  border-radius: 999rpx;
+  color: #4c534b;
+  min-width: 120rpx;
+  padding: 16rpx 28rpx;
+  text-align: center;
+}
+
+.chip.active {
+  background: #e7efe8;
+  border-color: #3f6049;
+  color: #2f4b38;
+  font-weight: 600;
+}
+
+.chip-hint {
+  color: #8a8f86;
+  font-size: 22rpx;
+  margin-top: 14rpx;
+}
+
+.btn {
+  align-items: center;
+  border-radius: 999rpx;
+  box-sizing: border-box;
+  display: flex;
+  font-size: 30rpx;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.2;
+  margin: 0;
+  padding: 24rpx 32rpx;
+  width: 100%;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-primary {
+  background: #3f6049;
+  color: #fffdf8;
+}
+
+.btn-primary[disabled] {
+  background: #b9c4ba;
+  color: #f1f3ef;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 2rpx solid #c9cec6;
+  color: #3f4a40;
+}
+
+.btn-danger {
+  background: #fff4f0;
+  border: 2rpx solid #dfb9ad;
+  color: #9c4a35;
+}
+
+.btn-link {
+  background: transparent;
+  color: #3f6049;
+  font-size: 26rpx;
+  padding: 12rpx;
+  text-decoration: underline;
+}
+
+.tag {
+  background: #eef1ea;
+  border-radius: 8rpx;
+  color: #556052;
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+}
+
+.tag-warm {
+  background: #f7ead8;
+  color: #8a5a24;
+}
+
+.badge-counter {
+  background: #f1eee5;
+  border-radius: 999rpx;
+  color: #6d746c;
+  font-size: 22rpx;
+  padding: 2rpx 14rpx;
+}
+
+.hero-label {
+  color: #2f4b38;
+  font-size: 48rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  line-height: 1.35;
+  margin: 12rpx 0 20rpx;
+}
+
+.anchor-list {
+  margin-top: 20rpx;
+}
+
+.anchor {
+  background: #f6f3ea;
+  border-radius: 12rpx;
+  color: #5d645b;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+  padding: 10rpx 16rpx;
+}
+
+.progress-track {
+  background: #ece9df;
+  border-radius: 999rpx;
+  height: 16rpx;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-fill {
+  background: #6f8f74;
+  border-radius: 999rpx;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.bar-row {
+  margin-top: 18rpx;
+}
+
+.bar-head {
+  color: #4c534b;
+  display: flex;
+  font-size: 25rpx;
+  justify-content: space-between;
+  margin-bottom: 6rpx;
+}
+
+.bar-track {
+  background: #f0ede4;
+  border-radius: 999rpx;
+  height: 12rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: #8aa58f;
+  border-radius: 999rpx;
+  height: 100%;
+}
+
+.lock-card {
+  background: #f8f5ec;
+  border: 2rpx dashed #c9cec6;
+  border-radius: 20rpx;
+  padding: 28rpx;
+}
+
+.scene-pill {
+  background: #f0ede3;
+  border-radius: 999rpx;
+  color: #5b6359;
+  font-size: 24rpx;
+  padding: 8rpx 18rpx;
+}
+
+.empty {
+  color: #7d837b;
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.note-input {
+  background: #f7f4ec;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+  min-height: 150rpx;
+  padding: 22rpx;
+  width: 100%;
+}
+
+.footer-note {
+  color: #969b91;
+  font-size: 22rpx;
+  line-height: 1.6;
+  padding: 8rpx 12rpx 24rpx;
+  text-align: center;
+}

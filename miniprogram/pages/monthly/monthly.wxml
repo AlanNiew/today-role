@@ -1,0 +1,125 @@
+<view class="page">
+  <view class="row-between">
+    <view>
+      <view class="section-title">MONTHLY</view>
+      <view class="card-title" style="font-size: 40rpx;">{{monthLabel || '本月角色卡'}}</view>
+    </view>
+    <view class="tag" wx:if="{{!blocked && !loading}}">{{planText}}</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty">正在整理这个月的记录…</view>
+
+  <view wx:elif="{{error}}" class="card center">
+    <view class="card-title">这次没有生成成功</view>
+    <view class="muted" style="margin: 12rpx 0 28rpx;">{{error}}</view>
+    <button class="btn btn-primary" bindtap="onGoRecord">回到记录页</button>
+  </view>
+
+  <block wx:elif="{{blocked}}">
+    <view class="card">
+      <view class="card-title">还差 {{requiredDays - recordedDays}} 天</view>
+      <view class="muted" style="margin-bottom: 24rpx;">{{message}}</view>
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{progress}}%;"></view>
+      </view>
+      <view class="row-between muted small" style="margin-top: 12rpx;">
+        <view>本月已记录 {{recordedDays}} 天</view>
+        <view>满 {{requiredDays}} 天可生成基础版</view>
+      </view>
+    </view>
+    <view class="card">
+      <view class="card-title">月卡会看到什么</view>
+      <view class="muted">6 个状态的天数分布、出现最多的 2 个场景、一句例外 / 张力，以及一条轻量行动建议。基础版免费。</view>
+    </view>
+    <button class="btn btn-primary" bindtap="onGoRecord">去记录今天</button>
+  </block>
+
+  <block wx:else>
+    <view class="card">
+      <view class="row-between">
+        <view class="card-title" style="margin-bottom: 0;">状态分布</view>
+        <view class="muted small">共 {{recordedDays}} 天记录</view>
+      </view>
+      <view wx:for="{{distribution}}" wx:key="status" class="bar-row">
+        <view class="bar-head">
+          <view>{{item.status}}</view>
+          <view>{{item.count}} 天 · {{item.percent}}%</view>
+        </view>
+        <view class="bar-track">
+          <view class="bar-fill" style="width: {{item.percent}}%;"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">高频场景 Top 2</view>
+      <view wx:if="{{topScenes.length === 0}}" class="muted">本月还没有场景数据。</view>
+      <view wx:for="{{topScenes}}" wx:key="scene" class="row-between" style="margin-top: 16rpx;">
+        <view class="scene-pill">{{item.scene}}</view>
+        <view class="muted small">{{item.count}} 天 · {{item.percent}}%</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">例外 / 张力</view>
+      <view class="muted" style="font-size: 28rpx;">{{tension}}</view>
+    </view>
+
+    <view class="card">
+      <view class="row-between" style="margin-bottom: 12rpx;">
+        <view class="card-title" style="margin-bottom: 0;">一条轻量建议</view>
+        <view class="tag">基础版</view>
+      </view>
+      <view class="muted" style="font-size: 28rpx;">{{actionSuggestion}}</view>
+    </view>
+
+    <block wx:if="{{isPro && insights}}">
+      <view class="section-title" style="margin-top: 32rpx;">MOCK PRO · 深度解读</view>
+
+      <view class="card">
+        <view class="card-title">触发 / 共现观察</view>
+        <view wx:for="{{insights.triggers}}" wx:key="*this" class="anchor">{{item}}</view>
+        <view class="divider"></view>
+        <view class="muted" style="font-size: 27rpx;">{{insights.coOccurrence}}</view>
+      </view>
+
+      <view class="card">
+        <view class="row-between" style="margin-bottom: 12rpx;">
+          <view class="card-title" style="margin-bottom: 0;">本月 vs 上月</view>
+          <view class="tag {{insights.comparison.available ? '' : 'tag-warm'}}">
+            {{insights.comparison.available ? '可对比' : '数据不足'}}
+          </view>
+        </view>
+        <view class="muted" style="font-size: 27rpx;">{{insights.comparison.summary}}</view>
+        <view wx:if="{{insights.comparison.available}}" class="muted" style="font-size: 27rpx; margin-top: 12rpx;">
+          {{insights.comparison.statusShift}}
+        </view>
+        <view wx:if="{{insights.comparison.available}}" class="muted" style="font-size: 27rpx; margin-top: 8rpx;">
+          {{insights.comparison.sceneShift}}
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title">完整行动建议</view>
+        <view wx:for="{{insights.actionPlan}}" wx:key="*this" class="anchor">{{item}}</view>
+        <view class="muted small" style="margin-top: 16rpx;">建议只基于记录中的共现，不构成医疗建议。</view>
+      </view>
+    </block>
+
+    <view wx:else class="lock-card">
+      <view class="row-between" style="margin-bottom: 12rpx;">
+        <view class="card-title" style="margin-bottom: 0;">更深一层的解读</view>
+        <view class="tag tag-warm">Mock Pro</view>
+      </view>
+      <view class="muted" style="margin-bottom: 16rpx;">免费版已包含分布、Top 场景、张力与一句建议。以下内容由本机 mock 开关控制，不接真实支付：</view>
+      <view class="muted small">· 触发 / 共现观察（标注不代表因果）</view>
+      <view class="muted small">· 本月 vs 上月历史对比</view>
+      <view class="muted small">· 3 条完整行动建议</view>
+      <button class="btn btn-ghost" style="margin-top: 24rpx;" bindtap="onOpenPaywall">了解 Mock Pro</button>
+    </view>
+
+    <button class="btn btn-link" bindtap="onGoRecord">补记 / 修改今天</button>
+  </block>
+
+  <view class="footer-note">仅供自我观察，不构成医疗建议。所有数据只存在本机。</view>
+</view>

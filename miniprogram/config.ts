@@ -1,0 +1,17 @@
+import type { GeneratorMode } from './core/generator';
+
+export type DataMode = 'local' | 'cloud';
+
+export interface AppConfig {
+  /** MVP 默认 local；切云开发时改成 cloud 并实现 CloudRepository */
+  dataMode: DataMode;
+  /** MVP 默认 rule；接入 LLM 后改成 llm */
+  generatorMode: GeneratorMode;
+  storagePrefix: string;
+}
+
+export const APP_CONFIG: AppConfig = {
+  dataMode: 'local',
+  generatorMode: 'rule',
+  storagePrefix: 'today-role.v1.',
+};
