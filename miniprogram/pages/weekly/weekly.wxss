@@ -1,1 +1,50 @@
-/* 页面样式复用 app.wxss 中的公共类 */
+.page-head {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 6rpx 26rpx;
+}
+
+.gate-number {
+  align-items: baseline;
+  display: flex;
+  margin: 4rpx 0 6rpx;
+}
+
+.gate-number__value {
+  color: #2f5d45;
+  font-family: "Songti SC", "Noto Serif CJK SC", "STSong", serif;
+  font-size: 92rpx;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.gate-number__unit {
+  color: #7c837a;
+  font-size: 26rpx;
+  margin-left: 10rpx;
+}
+
+.week-big {
+  align-items: baseline;
+  display: flex;
+  margin-top: 2rpx;
+}
+
+.week-big__value {
+  color: #2f5d45;
+  font-family: "Songti SC", "Noto Serif CJK SC", "STSong", serif;
+  font-size: 86rpx;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.week-big__unit {
+  color: #7c837a;
+  font-size: 25rpx;
+  margin-left: 10rpx;
+}
+
+.week-hero {
+  padding-bottom: 30rpx;
+}

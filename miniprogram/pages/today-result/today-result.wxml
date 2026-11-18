@@ -1,54 +1,84 @@
 <view class="page" wx:if="{{loading}}">
-  <view class="empty">正在生成今天的碎片…</view>
+  <view class="empty">
+    <view class="empty-title">正在生成</view>
+    <view class="muted">把你的记录变成今天的角色碎片…</view>
+  </view>
 </view>
 
 <view class="page" wx:elif="{{error}}">
   <view class="card center">
-    <view class="card-title">这次没有生成成功</view>
+    <view class="empty-title">这次没有生成成功</view>
     <view class="muted" style="margin: 12rpx 0 28rpx;">{{error}}</view>
-    <button class="btn btn-primary" bindtap="onEdit">回到记录页</button>
+    <button class="btn btn--primary" hover-class="btn-hover" bindtap="onEdit">回到记录页</button>
   </view>
 </view>
 
 <view class="page" wx:elif="{{missing}}">
   <view class="card center">
-    <view class="card-title">今天还没有记录</view>
+    <view class="empty-title">今天还没有记录</view>
     <view class="muted" style="margin: 12rpx 0 28rpx;">先花 5 秒选一个状态和一个场景，碎片会立刻出现。</view>
-    <button class="btn btn-primary" bindtap="onEdit">去记录</button>
+    <button class="btn btn--primary" hover-class="btn-hover" bindtap="onEdit">去记录</button>
   </view>
 </view>
 
 <view class="page" wx:else>
-  <view wx:if="{{savedText}}" class="tag" style="margin-bottom: 16rpx;">{{savedText}}</view>
-  <view class="section-title">{{dateLabel}} · 今日碎片</view>
+  <view wx:if="{{savedText}}" class="tag tag--sage reveal">{{savedText}}</view>
 
-  <view class="card">
-    <view class="muted small">今天的角色更像</view>
-    <view class="hero-label">{{label}}</view>
-    <view class="muted" style="font-size: 28rpx;">{{explanation}}</view>
+  <view class="result-card reveal">
+    <view class="result-orbit"></view>
+    <view class="result-orbit result-orbit--inner"></view>
+    <view class="result-meta">
+      <text>DAILY FRAGMENT</text>
+      <text>{{dateLabel}}</text>
+    </view>
+    <view class="result-kicker">今天的你更像</view>
+    <view class="result-label">{{label}}</view>
+    <view class="result-rule"></view>
+    <view class="result-desc">{{explanation}}</view>
 
-    <view class="divider"></view>
-    <view class="section-title" style="margin-bottom: 8rpx;">DATA ANCHORS</view>
-    <view class="anchor-list">
-      <view wx:for="{{anchors}}" wx:key="*this" class="anchor">{{item}}</view>
+    <view class="anchor-grid">
+      <view wx:for="{{anchors}}" wx:key="label" class="anchor-tile">
+        <view class="anchor-value">{{item.value}}</view>
+        <view class="anchor-label">{{item.label}}</view>
+      </view>
     </view>
   </view>
 
-  <view class="card" wx:if="{{note}}">
-    <view class="section-title" style="margin-bottom: 8rpx;">你写下的一句话</view>
-    <view style="font-size: 28rpx;">{{note}}</view>
-    <view class="muted small" style="margin-top: 12rpx;">这句话只保存在本机，不会进入生成文案。</view>
+  <view class="card reveal reveal-2" wx:if="{{note}}">
+    <view class="section-head">
+      <view class="section-title">你写下的一句话</view>
+      <view class="tag tag--outline">仅自己可见</view>
+    </view>
+    <view class="note-text">{{note}}</view>
+    <view class="muted small" style="margin-top: 14rpx;">这句话只保存在本机，不会进入生成文案。</view>
   </view>
 
-  <view class="card">
-    <view class="card-title">还差一点，就能看到更大的图景</view>
-    <view class="muted" style="margin-bottom: 24rpx;">最近 7 天满 3 天可看周快照；当月满 10 天可看月角色卡。</view>
-    <view class="row" style="gap: 16rpx;">
-      <button class="btn btn-ghost" style="flex: 1;" bindtap="onOpenWeekly">看本周</button>
-      <button class="btn btn-ghost" style="flex: 1;" bindtap="onOpenMonthly">看月卡</button>
+  <view class="reveal reveal-3">
+    <view class="section-head">
+      <view class="section-title">下一步</view>
+      <view class="section-note">把一天连成一段</view>
+    </view>
+
+    <view class="list-card">
+      <view class="list-row" hover-class="btn-hover" bindtap="onOpenWeekly">
+        <view class="row-icon row-icon--sage">7</view>
+        <view class="row-body">
+          <view class="row-title">看本周角色快照</view>
+          <view class="row-sub">最近 7 天满 3 天，解锁 2 个模式</view>
+        </view>
+        <view class="row-arrow">›</view>
+      </view>
+      <view class="list-row" hover-class="btn-hover" bindtap="onOpenMonthly">
+        <view class="row-icon row-icon--gold">月</view>
+        <view class="row-body">
+          <view class="row-title">看本月角色卡</view>
+          <view class="row-sub">当月满 10 天，看到分布、张力与建议</view>
+        </view>
+        <view class="row-arrow">›</view>
+      </view>
     </view>
   </view>
 
-  <button class="btn btn-link" bindtap="onEdit">修改今天的记录</button>
-  <view class="footer-note">碎片只描述今天的记录和近期共现，不是性格判断，也不构成医疗建议。</view>
+  <button class="btn btn--link" hover-class="btn-hover" bindtap="onEdit">修改今天的记录</button>
+  <view class="footer-note">碎片只描述记录中的共现，不是性格判断，也不构成医疗建议。</view>
 </view>

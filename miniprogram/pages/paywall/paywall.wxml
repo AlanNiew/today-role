@@ -1,42 +1,107 @@
 <view class="page">
-  <view class="section-title">PLAN</view>
-  <view class="card">
-    <view class="row-between">
-      <view>
-        <view class="muted small">当前方案</view>
-        <view class="card-title" style="font-size: 42rpx; margin-bottom: 0;">{{planText}}</view>
-      </view>
-      <view class="tag {{isPro ? 'tag-warm' : ''}}">{{isPro ? '已模拟开通' : '基础功能完整'}}</view>
+  <view class="pay-hero reveal">
+    <view class="pay-orbit"></view>
+    <view class="row-between" style="position: relative; z-index: 1;">
+      <view class="pay-badge">MOCK PRO</view>
+      <view class="tag tag--dark">{{planText}}</view>
     </view>
+    <view class="pay-title">把记录，</view>
+    <view class="pay-title" style="margin-top: -10rpx;">读得更深一点</view>
+    <view class="pay-sub">只加深解读，不锁基础功能，也不接支付。</view>
+  </view>
+
+  <view class="card card--tint reveal reveal-2">
+    <view class="section-head">
+      <view class="section-title">免费版一直可用</view>
+      <view class="tag tag--sage">基础</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">无限量每日记录，5 秒完成</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">今日角色碎片，带数据锚点</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">周快照</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">月卡：分布 / Top 2 场景 / 例外张力 / 一句建议</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">导出 JSON、清空全部数据</view>
+    </view>
+  </view>
+
+  <view class="card reveal reveal-3">
+    <view class="section-head">
+      <view class="section-title">Mock Pro 解锁</view>
+      <view class="tag {{isPro ? 'tag--gold' : 'tag--outline'}}">{{isPro ? '已模拟开通' : '开发测试'}}</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">月卡触发 / 共现观察，明确标注不代表因果</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">本月 vs 上月历史对比</view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-check">✓</view>
+      <view class="feature-text">3 条完整行动建议</view>
+    </view>
+
     <view class="divider"></view>
-    <view class="muted small">这是开发测试用的本机开关，不接微信支付，不会扣费，也不会上传任何信息。</view>
-  </view>
-
-  <view class="card">
-    <view class="card-title">免费版一直可用</view>
-    <view class="muted">· 无限量每日记录，5 秒完成</view>
-    <view class="muted">· 今日角色碎片，带数据锚点</view>
-    <view class="muted">· 周快照 2 个 Pattern</view>
-    <view class="muted">· 月卡：状态分布 / Top 2 场景 / 例外张力 / 一句建议</view>
-    <view class="muted">· 导出 JSON、清空全部数据</view>
-  </view>
-
-  <view class="card">
-    <view class="row-between" style="margin-bottom: 12rpx;">
-      <view class="card-title" style="margin-bottom: 0;">Mock Pro 解锁</view>
-      <view class="tag tag-warm">开发测试</view>
+    <view class="section-title" style="margin-bottom: 12rpx;">免费 vs Mock Pro</view>
+    <view class="compare-table">
+      <view class="compare-row">
+        <view class="compare-cell">能力</view>
+        <view class="compare-cell">免费</view>
+        <view class="compare-cell">Pro</view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell">每日记录与碎片</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell">周快照 2 个模式</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell">月卡基础版</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell">深度解读与建议</view>
+        <view class="compare-cell compare-cell--no">—</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+      </view>
+      <view class="compare-row">
+        <view class="compare-cell">导出 JSON</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+        <view class="compare-cell compare-cell--yes">✓</view>
+      </view>
     </view>
-    <view class="muted">· 月卡触发 / 共现观察（明确标注不代表因果）</view>
-    <view class="muted">· 本月 vs 上月历史对比</view>
-    <view class="muted">· 3 条完整行动建议</view>
-    <view class="muted" style="margin-top: 16rpx;">不包含：分享奖励、真人咨询或医疗建议。每日记录和基础月卡永远不会被锁。</view>
+
+    <view class="mock-note">不包含：分享奖励、真人咨询或医疗建议。每日记录和基础月卡永远不会被锁。</view>
   </view>
 
-  <button class="btn {{isPro ? 'btn-ghost' : 'btn-primary'}}" loading="{{loading || toggling}}" disabled="{{loading || toggling}}" bindtap="onToggle">
-    {{isPro ? '关闭 Mock Pro' : '模拟开通 Pro'}}
-  </button>
+  <button
+    class="btn {{isPro ? 'btn--ghost' : 'btn--gold'}} reveal reveal-4"
+    hover-class="btn-hover"
+    loading="{{loading || toggling}}"
+    disabled="{{loading || toggling}}"
+    bindtap="onToggle"
+  >{{isPro ? '关闭 Mock Pro' : '模拟开通 Pro'}}</button>
 
-  <button class="btn btn-link" bindtap="onBack">返回</button>
+  <button class="btn btn--link" hover-class="btn-hover" bindtap="onBack">返回</button>
 
-  <view class="footer-note">Mock 权益只写在本机存储；换设备、清空数据或卸载小程序后即失效。</view>
+  <view class="footer-note">Mock 权益只写本机；换设备或清空后失效。</view>
 </view>

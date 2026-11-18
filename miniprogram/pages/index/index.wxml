@@ -1,69 +1,94 @@
-<view class="page">
-  <view class="row-between">
-    <view>
-      <view class="section-title">TODAY</view>
-      <view class="card-title" style="font-size: 40rpx;">{{todayLabel}}</view>
+<view class="page home-page">
+  <view class="hero reveal">
+    <view class="hero__top">
+      <view class="brand">
+        <view class="brand-mark serif">今</view>
+        <view>
+          <view class="eyebrow">TODAY · {{todayWeekday}}</view>
+          <view class="hero__date">{{todayMonthDay}}</view>
+        </view>
+      </view>
+      <view class="tag {{hasEntry ? 'tag--sage' : 'tag--outline'}}">{{hasEntry ? '今天已记录' : '5 秒记录'}}</view>
     </view>
-    <view wx:if="{{hasEntry}}" class="tag">今天已记录</view>
+
+    <view class="hero__title">{{greeting}}，<text class="serif hero__accent">感觉如何？</text></view>
+    <view class="hero__sub">选状态与场景，5 秒生成今日碎片。</view>
+
+    <view class="hero__orbit"></view>
+    <view class="hero__orbit-dot"></view>
   </view>
 
-  <view class="muted" style="margin: 4rpx 4rpx 28rpx;">选一个状态、一个场景，5 秒就够。之后随时可以改。</view>
-
-  <view class="card">
-    <view class="row-between" style="margin-bottom: 20rpx;">
-      <view class="card-title" style="margin-bottom: 0;">今天的状态</view>
-      <view class="badge-counter">1 / 2</view>
+  <view class="card reveal reveal-2">
+    <view class="section-head">
+      <view class="section-title">01 · 今天的状态</view>
+      <view class="section-note">单选</view>
     </view>
-    <view class="chips">
+    <view class="status-grid">
       <view
-        wx:for="{{statuses}}"
-        wx:key="*this"
-        class="chip {{selectedStatus === item ? 'active' : ''}}"
-        data-value="{{item}}"
+        wx:for="{{statusOptions}}"
+        wx:key="label"
+        class="status-option {{selectedStatus === item.label ? 'is-selected' : ''}}"
+        hover-class="btn-hover"
+        data-value="{{item.label}}"
         bindtap="onSelectStatus"
-      >{{item}}</view>
+      >
+        <view class="status-dot status-dot--{{item.tone}}"></view>
+        <view class="status-name">{{item.label}}</view>
+      </view>
     </view>
   </view>
 
-  <view class="card">
-    <view class="row-between" style="margin-bottom: 20rpx;">
-      <view class="card-title" style="margin-bottom: 0;">发生在哪里</view>
-      <view class="badge-counter">2 / 2</view>
+  <view class="card reveal reveal-3">
+    <view class="section-head">
+      <view class="section-title">02 · 发生在哪里</view>
+      <view class="section-note">单选</view>
     </view>
-    <view class="chips">
+    <view class="scene-grid">
       <view
-        wx:for="{{scenes}}"
-        wx:key="*this"
-        class="chip {{selectedScene === item ? 'active' : ''}}"
-        data-value="{{item}}"
+        wx:for="{{sceneOptions}}"
+        wx:key="label"
+        class="scene-option {{selectedScene === item.label ? 'is-selected' : ''}}"
+        hover-class="btn-hover"
+        data-value="{{item.label}}"
         bindtap="onSelectScene"
-      >{{item}}</view>
+      >{{item.label}}</view>
+    </view>
+
+    <view class="combo-preview {{selectedStatus && selectedScene ? 'is-ready' : ''}}">
+      <view class="combo-label">TODAY'S COMBO</view>
+      <view wx:if="{{selectedStatus && selectedScene}}" class="combo-text">
+        {{selectedStatus}} × {{selectedScene}}
+        <text class="combo-ready">已就位</text>
+      </view>
+      <view wx:else class="combo-text">选好两项，这里会出现今天的组合</view>
     </view>
   </view>
 
-  <view class="card">
-    <view class="row-between" style="margin-bottom: 16rpx;">
-      <view class="card-title" style="margin-bottom: 0;">留一句话</view>
-      <view class="muted small">{{note.length}} / 100</view>
+  <view class="card reveal reveal-4">
+    <view class="section-head">
+      <view class="section-title">03 · 留一句话</view>
+      <view class="counter">{{note.length}} / 100</view>
     </view>
     <textarea
       class="note-input"
       value="{{note}}"
       maxlength="100"
-      placeholder="可选。只保存在本机，不会用于生成文案。"
+      placeholder="可选。今天想记住的一个细节……"
       placeholder-class="muted"
       bindinput="onNoteInput"
       auto-height
     />
+    <view class="muted small" style="margin-top: 12rpx;">只保存在本机，也不会进入生成文案。</view>
   </view>
 
-  <button
-    class="btn btn-primary"
-    style="margin-top: 12rpx;"
-    loading="{{saving}}"
-    disabled="{{saving || loading}}"
-    bindtap="onSave"
-  >{{hasEntry ? '更新今天的记录' : '保存今天的记录'}}</button>
-
-  <view class="footer-note">记录只写在本机存储，不会上传，也不会分享给任何人。</view>
+  <view class="cta-block reveal reveal-5">
+    <button
+      class="btn btn--primary"
+      hover-class="btn-hover"
+      loading="{{saving}}"
+      disabled="{{saving || loading}}"
+      bindtap="onSave"
+    >{{hasEntry ? '更新今天的记录' : '保存今天的记录'}}</button>
+    <view class="trust-line">只存在本机 · 不上传 · 随时可导出或清空</view>
+  </view>
 </view>

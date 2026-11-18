@@ -81,6 +81,13 @@ if (!tabBar || !Array.isArray(tabBar.list) || tabBar.list.length !== 3) {
     if (!item.text) {
       fail(`tabBar 入口缺少文字：${item.pagePath}`);
     }
+    for (const iconKey of ['iconPath', 'selectedIconPath']) {
+      if (!item[iconKey]) {
+        fail(`tabBar 入口缺少 ${iconKey}：${item.pagePath}`);
+      } else if (!existsSync(join(miniRoot, item[iconKey]))) {
+        fail(`tabBar 图标不存在：miniprogram/${item[iconKey]}`);
+      }
+    }
   }
   const expected = ['pages/index/index', 'pages/weekly/weekly', 'pages/settings/settings'];
   for (const page of expected) {
@@ -101,6 +108,7 @@ for (const file of walk(miniRoot, ['.json'])) {
 
 // WXML：标签配对、表达式括号、事件处理器存在
 const handlerPattern = /bind[a-z]+="([A-Za-z0-9_]+)"/g;
+const allowedTags = new Set(['view', 'text', 'button', 'textarea', 'input', 'image', 'scroll-view', 'block', 'navigator']);
 const wxmlFiles = walk(miniRoot, ['.wxml']);
 for (const file of wxmlFiles) {
   const content = readFileSync(file, 'utf8');
@@ -148,6 +156,9 @@ for (const file of wxmlFiles) {
       continue;
     }
     const name = nameMatch[1];
+    if (!allowedTags.has(name)) {
+      fail(`WXML 使用了未登记的内置组件 <${name}>：${relative(root, file)}`);
+    }
     if (closing) {
       const last = stack.pop();
       if (last !== name) {
@@ -168,6 +179,16 @@ for (const file of wxmlFiles) {
     if (!new RegExp(`\\b${handler}\\s*\\(`).test(tsContent)) {
       fail(`WXML 事件没有对应方法：${relative(root, file)} → ${handler}`);
     }
+  }
+}
+
+// WXSS 花括号配对
+for (const file of walk(miniRoot, ['.wxss'])) {
+  const content = readFileSync(file, 'utf8');
+  const open = (content.match(/\{/g) ?? []).length;
+  const close = (content.match(/\}/g) ?? []).length;
+  if (open !== close) {
+    fail(`WXSS 花括号不配对：${relative(root, file)}（{ ${open} / } ${close}）`);
   }
 }
 

@@ -82,6 +82,7 @@ today-role/
 │   │       ├── types.ts          # Repository / KeyValueStorage / 导出包
 │   │       ├── local.ts          # LocalRepository（wx.storage 或任意 KV 适配器）
 │   │       └── memory.ts         # 内存仓储（测试 / 预览）
+│   ├── assets/tab/               # 本地 tabBar 线性图标（普通 / 选中）
 │   ├── data/
 │   │   ├── repository.ts         # 组合本地存储 + 仓储，暴露单例入口
 │   │   └── wx-storage.ts         # wx.storage → KeyValueStorage 适配器
@@ -117,6 +118,18 @@ pages/index ──保存/更新──▶ LocalRepository ──▶ pages/today-r
 - 页面通过 `getApp<IAppOption>().globalData` 取得 `repository` 与 `generator`，不直接碰 `wx.storage`。
 - 页面只做展示和交互；聚合、门控、文案全部在 `core` 中，可单测。
 - 数据访问全部是 `Promise`，为后续云开发留出异步空间。
+
+## 界面与视觉
+
+方向是「安静的手账感」：纸张底色、鼠尾草绿、金色点缀、衬线标题。目标不是花哨，而是让人愿意每天打开一次。
+
+- 首屏：日期 / 问候 / 品牌字标 + 状态网格 + 场景胶囊 + 实时组合预览；选中项有底色、描边和轻微上浮。
+- 状态有固定颜色（兴奋金、平稳绿、紧绷陶土、低电量蓝灰、烦躁玫红、麻木灰），分布条、周点阵复用同一套颜色。
+- 周快照用 7 个点阵显示哪几天有记录；月卡用深绿封面 + 彩色分布条；付费页用深绿 + 金色 Pro 标识。
+- 底部 3 个 tab 使用本机 PNG 线性图标（普通 / 选中两套），不依赖网络图片。
+- 所有装饰（圆环、光晕、点阵、进度条）由 WXSS 绘制，没有外部插图或字体请求。
+- 入场使用 0.46s 的轻微上浮，不阻塞交互；降低动效偏好未单独适配（微信 WebView 不支持媒体查询时忽略）。
+- 视觉资产全部在 `miniprogram/assets/`，不产生网络请求。
 
 ## 数据模型
 

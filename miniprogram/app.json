@@ -9,28 +9,34 @@
   ],
   "window": {
     "navigationBarTitleText": "今日角色",
-    "navigationBarBackgroundColor": "#f4f2ec",
+    "navigationBarBackgroundColor": "#f5f0e6",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f4f2ec",
+    "backgroundColor": "#f5f0e6",
     "backgroundTextStyle": "dark"
   },
   "tabBar": {
-    "color": "#8a8a84",
-    "selectedColor": "#3f6049",
-    "backgroundColor": "#fffdf8",
+    "color": "#8a8377",
+    "selectedColor": "#2f5d45",
+    "backgroundColor": "#fffcf6",
     "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "记录"
+        "text": "记录",
+        "iconPath": "assets/tab/record.png",
+        "selectedIconPath": "assets/tab/record-active.png"
       },
       {
         "pagePath": "pages/weekly/weekly",
-        "text": "角色"
+        "text": "角色",
+        "iconPath": "assets/tab/role.png",
+        "selectedIconPath": "assets/tab/role-active.png"
       },
       {
         "pagePath": "pages/settings/settings",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/tab/mine.png",
+        "selectedIconPath": "assets/tab/mine-active.png"
       }
     ]
   },

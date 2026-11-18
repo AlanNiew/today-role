@@ -1,9 +1,6 @@
 import { monthKey, monthLabel } from '../../core/date';
 import { isProActive } from '../../core/entitlement';
-import {
-  percent,
-  uniqueRecordedDays,
-} from '../../core/stats';
+import { percent, uniqueRecordedDays } from '../../core/stats';
 import type { MonthlyInsights, SceneCount, Status } from '../../core/types';
 import { STATUSES } from '../../core/types';
 
@@ -11,11 +8,21 @@ interface DistributionRow {
   status: Status;
   count: number;
   percent: number;
+  color: string;
 }
 
 interface SceneRow extends SceneCount {
   percent: number;
 }
+
+const STATUS_COLORS: Record<Status, string> = {
+  平稳: '#5f8a6e',
+  紧绷: '#c17a58',
+  低电量: '#6f87a6',
+  兴奋: '#d99a3d',
+  烦躁: '#b4635f',
+  麻木: '#948c7e',
+};
 
 Page({
   data: {
@@ -24,6 +31,7 @@ Page({
     error: '',
     month: '',
     monthLabel: '',
+    monthShort: '',
     recordedDays: 0,
     requiredDays: 10,
     progress: 0,
@@ -70,6 +78,7 @@ Page({
           blocked: true,
           month,
           monthLabel: monthLabel(month),
+          monthShort: month.replace('-', '.'),
           recordedDays: result.recordedDays,
           requiredDays: result.requiredDays,
           progress: Math.round((result.recordedDays / result.requiredDays) * 100),
@@ -103,6 +112,7 @@ Page({
         status,
         count: card.statusDistribution[status],
         percent: percent(card.statusDistribution[status], days),
+        color: STATUS_COLORS[status],
       }));
       const scenes = card.topScenes.map((item) => ({
         scene: item.scene,
@@ -115,6 +125,7 @@ Page({
         blocked: false,
         month,
         monthLabel: monthLabel(month),
+        monthShort: month.replace('-', '.'),
         recordedDays: days,
         distribution,
         topScenes: scenes,
@@ -128,6 +139,10 @@ Page({
       console.error('生成月卡失败', error);
       this.setData({ loading: false, blocked: false, error: '生成失败，请稍后重试。' });
     }
+  },
+
+  onRefresh() {
+    this.onShow();
   },
 
   onGoRecord() {

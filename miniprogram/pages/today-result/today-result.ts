@@ -1,6 +1,21 @@
 import { formatDateLabel, toDateKey } from '../../core/date';
 import type { DailyEntry } from '../../core/types';
 
+interface AnchorItem {
+  label: string;
+  value: string;
+}
+
+function toAnchorItems(anchors: string[]): AnchorItem[] {
+  return anchors.map((text) => {
+    const index = text.indexOf('：');
+    if (index <= 0) {
+      return { label: text, value: '' };
+    }
+    return { label: text.slice(0, index), value: text.slice(index + 1) };
+  });
+}
+
 Page({
   data: {
     loading: true,
@@ -10,7 +25,7 @@ Page({
     dateLabel: '',
     label: '',
     explanation: '',
-    anchors: [] as string[],
+    anchors: [] as AnchorItem[],
     note: '',
     savedText: '',
   },
@@ -35,7 +50,7 @@ Page({
         loading: false,
         label: fragment.label,
         explanation: fragment.explanation,
-        anchors: fragment.dataAnchors,
+        anchors: toAnchorItems(fragment.dataAnchors),
         note: entry.note ?? '',
       });
     } catch (error) {

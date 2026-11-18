@@ -1,15 +1,45 @@
-import { formatDateLabel, toDateKey } from '../../core/date';
+import { parseDateKey, toDateKey, weekdayLabel } from '../../core/date';
 import { SCENES, STATUSES, type Scene, type Status } from '../../core/types';
 
 type TapEvent = { currentTarget: { dataset: { value?: string } } };
 type NoteEvent = { detail: { value: string } };
 
+const STATUS_TONES: Record<Status, string> = {
+  平稳: 'calm',
+  紧绷: 'tense',
+  低电量: 'low',
+  兴奋: 'excited',
+  烦躁: 'irritated',
+  麻木: 'numb',
+};
+
+const STATUS_OPTIONS = STATUSES.map((label) => ({ label, tone: STATUS_TONES[label] }));
+const SCENE_OPTIONS = SCENES.map((label) => ({ label }));
+
+function greetingOf(hour: number): string {
+  if (hour < 6) {
+    return '夜深了';
+  }
+  if (hour < 11) {
+    return '早上好';
+  }
+  if (hour < 14) {
+    return '中午好';
+  }
+  if (hour < 18) {
+    return '下午好';
+  }
+  return '晚上好';
+}
+
 Page({
   data: {
     todayKey: '',
-    todayLabel: '',
-    statuses: STATUSES,
-    scenes: SCENES,
+    todayMonthDay: '',
+    todayWeekday: '',
+    greeting: '你好',
+    statusOptions: STATUS_OPTIONS,
+    sceneOptions: SCENE_OPTIONS,
     selectedStatus: '' as Status | '',
     selectedScene: '' as Scene | '',
     note: '',
@@ -21,9 +51,12 @@ Page({
   async onShow() {
     const today = new Date();
     const todayKey = toDateKey(today);
+    const todayDate = parseDateKey(todayKey);
     this.setData({
       todayKey,
-      todayLabel: formatDateLabel(todayKey),
+      todayMonthDay: `${todayDate.getMonth() + 1}月${todayDate.getDate()}日`,
+      todayWeekday: weekdayLabel(todayDate),
+      greeting: greetingOf(today.getHours()),
       loading: true,
     });
     try {
@@ -44,6 +77,9 @@ Page({
   },
 
   onSelectStatus(event: TapEvent) {
+    if (this.data.loading) {
+      return;
+    }
     const value = event.currentTarget.dataset.value;
     if (!value || !(STATUSES as readonly string[]).includes(value)) {
       return;
@@ -52,6 +88,9 @@ Page({
   },
 
   onSelectScene(event: TapEvent) {
+    if (this.data.loading) {
+      return;
+    }
     const value = event.currentTarget.dataset.value;
     if (!value || !(SCENES as readonly string[]).includes(value)) {
       return;

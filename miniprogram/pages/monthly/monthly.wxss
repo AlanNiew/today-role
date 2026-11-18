@@ -1,1 +1,117 @@
-/* 页面样式复用 app.wxss 中的公共类 */
+.page-head {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 6rpx 26rpx;
+}
+
+.gate-number {
+  align-items: baseline;
+  display: flex;
+  margin: 4rpx 0 6rpx;
+}
+
+.gate-number__value {
+  color: #2f5d45;
+  font-family: "Songti SC", "Noto Serif CJK SC", "STSong", serif;
+  font-size: 92rpx;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.gate-number__unit {
+  color: #7c837a;
+  font-size: 26rpx;
+  margin-left: 10rpx;
+}
+
+.pro-panel__title {
+  color: #f8f2e4;
+  font-family: "Songti SC", "Noto Serif CJK SC", "STSong", serif;
+  font-size: 36rpx;
+  font-weight: 600;
+  margin: 26rpx 0 10rpx;
+}
+
+.pro-panel__label {
+  color: #d8b06c;
+  font-size: 20rpx;
+  letter-spacing: 3rpx;
+  margin-bottom: 8rpx;
+}
+
+.pro-panel__text {
+  color: rgba(245, 239, 224, 0.78);
+  font-size: 26rpx;
+  line-height: 1.75;
+}
+
+.pro-divider {
+  background: rgba(255, 255, 255, 0.12);
+  height: 1rpx;
+  margin: 22rpx 0;
+}
+
+.compare-line {
+  border-top: 1rpx solid #eee7da;
+  margin-top: 18rpx;
+  padding-top: 16rpx;
+}
+
+.compare-line__label {
+  color: #99958a;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  margin-bottom: 4rpx;
+}
+
+.compare-line__text {
+  color: #4f5c52;
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.action-item {
+  align-items: flex-start;
+  border-top: 1rpx solid rgba(111, 143, 116, 0.18);
+  display: flex;
+  padding: 16rpx 0;
+}
+
+.action-item:first-of-type {
+  border-top: none;
+}
+
+.action-index {
+  color: #8aa58f;
+  flex: 0 0 56rpx;
+  font-family: "Songti SC", "Noto Serif CJK SC", "STSong", serif;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.action-item__text {
+  color: #415046;
+  flex: 1;
+  font-size: 26rpx;
+  line-height: 1.75;
+}
+
+.pro-lock {
+  margin-bottom: 26rpx;
+}
+
+.pro-lock__title {
+  color: #503f24;
+  font-family: "Songti SC", "Noto Serif CJK SC", "STSong", serif;
+  font-size: 40rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 10rpx;
+}
+
+.pro-panel__title + .pro-trigger {
+  border-top: none;
+  padding-top: 0;
+}
