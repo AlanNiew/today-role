@@ -2,7 +2,7 @@
   "description": "今日角色小程序项目配置",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "appid": "touristappid",
+  "appid": "wx32d9039656d150d3",
   "projectname": "today-role",
   "libVersion": "3.7.12",
   "setting": {
@@ -15,8 +15,32 @@
     "checkSiteMap": true,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "useCompilerPlugins": ["typescript"],
-    "minifyWXSS": true
+    "useCompilerPlugins": [
+      "typescript"
+    ],
+    "minifyWXSS": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {},
+  "isGameTourist": false
 }

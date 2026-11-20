@@ -1,4 +1,4 @@
-import type { GeneratorMode } from './core/generator';
+import type { GeneratorMode } from './core/generator/index';
 
 export type DataMode = 'local' | 'cloud';
 

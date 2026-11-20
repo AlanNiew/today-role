@@ -1,5 +1,5 @@
 import { APP_CONFIG } from './config';
-import { createGenerator } from './core/generator';
+import { createGenerator } from './core/generator/index';
 import { getRepository } from './data/repository';
 
 App<IAppOption>({
