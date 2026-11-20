@@ -1,4 +1,5 @@
 import { parseDateKey, toDateKey, weekdayLabel } from '../../core/date';
+import { isKnownScene, isKnownStatus } from '../../core/stats';
 import { SCENES, STATUSES, type Scene, type Status } from '../../core/types';
 
 type TapEvent = { currentTarget: { dataset: { value?: string } } };
@@ -81,10 +82,10 @@ Page({
       return;
     }
     const value = event.currentTarget.dataset.value;
-    if (!value || !(STATUSES as readonly string[]).includes(value)) {
+    if (!value || !isKnownStatus(value)) {
       return;
     }
-    this.setData({ selectedStatus: value as Status });
+    this.setData({ selectedStatus: value });
   },
 
   onSelectScene(event: TapEvent) {
@@ -92,10 +93,10 @@ Page({
       return;
     }
     const value = event.currentTarget.dataset.value;
-    if (!value || !(SCENES as readonly string[]).includes(value)) {
+    if (!value || !isKnownScene(value)) {
       return;
     }
-    this.setData({ selectedScene: value as Scene });
+    this.setData({ selectedScene: value });
   },
 
   onNoteInput(event: NoteEvent) {

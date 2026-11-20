@@ -1,7 +1,7 @@
 import { formatDateLabel, monthKey, pad2, toDateKey } from '../../core/date';
-import { isProActive } from '../../core/entitlement';
+import { isProActive, planLabel } from '../../core/entitlement';
 import { buildDemoEntries } from '../../core/seed';
-import { uniqueRecordedDays } from '../../core/stats';
+import { filterByMonth, uniqueRecordedDays } from '../../core/stats';
 
 Page({
   data: {
@@ -31,10 +31,10 @@ Page({
         loading: false,
         totalEntries: entries.length,
         recordedDays: uniqueRecordedDays(entries).length,
-        currentMonthDays: entries.filter((entry) => entry.date.slice(0, 7) === month).length,
+        currentMonthDays: filterByMonth(entries, month).length,
         firstDateLabel: entries.length > 0 ? formatDateLabel(entries[0].date) : '还没有记录',
         isPro: isProActive(entitlement),
-        planText: isProActive(entitlement) ? 'Mock Pro' : '免费版',
+        planText: planLabel(entitlement),
       });
     } catch (error) {
       console.error('读取本地统计失败', error);

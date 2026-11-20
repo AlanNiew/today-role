@@ -8,6 +8,16 @@ import {
 } from './types';
 import { parseDateKey, toDateKey, weekdayIndex, WEEKDAY_LABELS } from './date';
 
+/** 校验未知来源的值是否为已知状态（存储读取 / 事件 data 传入时用）。 */
+export function isKnownStatus(value: unknown): value is Status {
+  return (STATUSES as readonly unknown[]).includes(value);
+}
+
+/** 校验未知来源的值是否为已知场景。 */
+export function isKnownScene(value: unknown): value is Scene {
+  return (SCENES as readonly unknown[]).includes(value);
+}
+
 /**
  * 仅用于「找模式 / 排序」的参考值，不是心理量表。
  * 兴奋 5 → 麻木 0。

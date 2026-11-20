@@ -1,13 +1,11 @@
 import { isValidDateKey } from '../date';
 import { createFreeEntitlement } from '../entitlement';
-import { sortByDate } from '../stats';
-import {
-  SCENES,
-  STATUSES,
-  type DailyEntry,
-  type Entitlement,
-  type MonthlyCard,
-  type WeeklySnapshot,
+import { isKnownScene, isKnownStatus, sortByDate } from '../stats';
+import type {
+  DailyEntry,
+  Entitlement,
+  MonthlyCard,
+  WeeklySnapshot,
 } from '../types';
 import type {
   ExportBundle,
@@ -103,6 +101,17 @@ export class LocalRepository implements Repository {
     this.writeJson('user', userId);
   }
 
+  /** 按键升序裁剪，只保留最近 limit 条，避免本地存储无限增长。 */
+  private pruneMap<T>(map: StoredMap<T>, limit: number): void {
+    const keys = Object.keys(map).sort();
+    while (keys.length > limit) {
+      const oldest = keys.shift();
+      if (oldest) {
+        delete map[oldest];
+      }
+    }
+  }
+
   private readEntries(): DailyEntry[] {
     const entries = this.readJson<DailyEntry[]>('entries', []);
     if (!Array.isArray(entries)) {
@@ -113,8 +122,8 @@ export class LocalRepository implements Repository {
         (entry) =>
           entry &&
           isValidDateKey(entry.date) &&
-          (STATUSES as readonly string[]).includes(entry.status) &&
-          (SCENES as readonly string[]).includes(entry.scene),
+          isKnownStatus(entry.status) &&
+          isKnownScene(entry.scene),
       ),
     );
   }
@@ -135,10 +144,10 @@ export class LocalRepository implements Repository {
     if (!isValidDateKey(input.date)) {
       throw new Error('日期格式必须是 YYYY-MM-DD');
     }
-    if (!(STATUSES as readonly string[]).includes(input.status)) {
+    if (!isKnownStatus(input.status)) {
       throw new Error('未知状态');
     }
-    if (!(SCENES as readonly string[]).includes(input.scene)) {
+    if (!isKnownScene(input.scene)) {
       throw new Error('未知场景');
     }
     const note = (input.note ?? '').trim();
@@ -189,10 +198,10 @@ export class LocalRepository implements Repository {
       if (!isValidDateKey(entry.date)) {
         continue;
       }
-      if (!(STATUSES as readonly string[]).includes(entry.status)) {
+      if (!isKnownStatus(entry.status)) {
         continue;
       }
-      if (!(SCENES as readonly string[]).includes(entry.scene)) {
+      if (!isKnownScene(entry.scene)) {
         continue;
       }
       byDate.set(entry.date, {
@@ -242,14 +251,8 @@ export class LocalRepository implements Repository {
   async saveWeeklySnapshot(snapshot: WeeklySnapshot): Promise<void> {
     const map = this.readJson<StoredMap<WeeklySnapshot>>('weekly', {});
     map[snapshot.weekStart] = snapshot;
-    // 只保留最近 8 周，避免本地存储无限增长
-    const keys = Object.keys(map).sort();
-    while (keys.length > 8) {
-      const oldest = keys.shift();
-      if (oldest) {
-        delete map[oldest];
-      }
-    }
+    // 只保留最近 8 周
+    this.pruneMap(map, 8);
     this.writeJson('weekly', map);
   }
 
@@ -262,13 +265,7 @@ export class LocalRepository implements Repository {
     const map = this.readJson<StoredMap<MonthlyCard>>('monthly', {});
     map[card.month] = card;
     // 保留最近 6 个月
-    const keys = Object.keys(map).sort();
-    while (keys.length > 6) {
-      const oldest = keys.shift();
-      if (oldest) {
-        delete map[oldest];
-      }
-    }
+    this.pruneMap(map, 6);
     this.writeJson('monthly', map);
   }
 

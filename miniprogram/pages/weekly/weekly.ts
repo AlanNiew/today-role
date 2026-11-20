@@ -1,4 +1,12 @@
-import { addDays, formatMonthDay, parseDateKey, toDateKey, weekdayLabel } from '../../core/date';
+import {
+  addDays,
+  formatMonthDay,
+  parseDateKey,
+  startOfWeekMonday,
+  toDateKey,
+  weekdayLabel,
+} from '../../core/date';
+import { percent, recentEntries, uniqueRecordedDays } from '../../core/stats';
 import type { Pattern } from '../../core/types';
 
 interface WeekDot {
@@ -61,8 +69,31 @@ Page({
       const userId = await repository.getUserId();
       const entries = await repository.listEntries();
       const weekDots = buildWeekDots(entries, todayKey);
-      const recordedDays = weekDots.filter((item) => item.recorded).length;
+      const recordedDays = uniqueRecordedDays(recentEntries(entries, today, 7)).length;
       const rangeLabel = `${formatMonthDay(toDateKey(addDays(todayDate, -6)))} — ${formatMonthDay(todayKey)}`;
+
+      // 优先复用「今天生成且此后没有新记录」的缓存快照，避免每次进入页面都重算。
+      // 演示数据 / 清空会整体清理周缓存，这里一定能感知并重新生成。
+      const weekStart = toDateKey(startOfWeekMonday(todayDate));
+      const cached = await repository.getWeeklySnapshot(weekStart);
+      const latestUpdate = entries.reduce((max, entry) => Math.max(max, entry.updatedAt), 0);
+      if (
+        cached &&
+        toDateKey(new Date(cached.generatedAt)) === todayKey &&
+        cached.generatedAt >= latestUpdate
+      ) {
+        this.setData({
+          loading: false,
+          blocked: false,
+          recordedDays,
+          patterns: cached.patterns,
+          counterCount: cached.patterns.filter((pattern) => pattern.isCounterIntuitive).length,
+          rangeLabel,
+          weekDots,
+        });
+        return;
+      }
+
       const result = await app.globalData.generator.generateWeeklySnapshot({
         entries,
         today,
@@ -75,7 +106,7 @@ Page({
           blocked: true,
           recordedDays: result.recordedDays,
           requiredDays: result.requiredDays,
-          progress: Math.round((result.recordedDays / result.requiredDays) * 100),
+          progress: percent(result.recordedDays, result.requiredDays),
           message: result.message,
           rangeLabel,
           weekDots,

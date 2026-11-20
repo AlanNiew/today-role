@@ -1,6 +1,6 @@
 import { monthKey, monthLabel } from '../../core/date';
-import { isProActive } from '../../core/entitlement';
-import { percent, uniqueRecordedDays } from '../../core/stats';
+import { isProActive, planLabel } from '../../core/entitlement';
+import { filterByMonth, percent, uniqueRecordedDays } from '../../core/stats';
 import type { MonthlyInsights, SceneCount, Status } from '../../core/types';
 import { STATUSES } from '../../core/types';
 
@@ -81,7 +81,7 @@ Page({
           monthShort: month.replace('-', '.'),
           recordedDays: result.recordedDays,
           requiredDays: result.requiredDays,
-          progress: Math.round((result.recordedDays / result.requiredDays) * 100),
+          progress: percent(result.recordedDays, result.requiredDays),
           message: result.message,
         });
         return;
@@ -107,7 +107,7 @@ Page({
         }
       }
 
-      const days = uniqueRecordedDays(entries.filter((entry) => entry.date.slice(0, 7) === month)).length;
+      const days = uniqueRecordedDays(filterByMonth(entries, month)).length;
       const distribution = STATUSES.map((status) => ({
         status,
         count: card.statusDistribution[status],
@@ -132,7 +132,7 @@ Page({
         tension: card.tension ?? '',
         actionSuggestion: card.actionSuggestion ?? '',
         isPro: pro,
-        planText: pro ? 'Mock Pro' : '免费版',
+        planText: planLabel(entitlement),
         insights,
       });
     } catch (error) {

@@ -1,4 +1,4 @@
-import { createMockProEntitlement, isProActive } from '../../core/entitlement';
+import { createMockProEntitlement, isProActive, planLabel } from '../../core/entitlement';
 
 Page({
   data: {
@@ -14,7 +14,7 @@ Page({
       const repository = getApp<IAppOption>().globalData.repository;
       const entitlement = await repository.getEntitlement();
       const pro = isProActive(entitlement);
-      this.setData({ loading: false, isPro: pro, planText: pro ? 'Mock Pro' : '免费版' });
+      this.setData({ loading: false, isPro: pro, planText: planLabel(entitlement) });
     } catch (error) {
       console.error('读取权益失败', error);
       this.setData({ loading: false });
@@ -40,8 +40,13 @@ Page({
         try {
           const repository = getApp<IAppOption>().globalData.repository;
           const userId = await repository.getUserId();
-          await repository.setEntitlement(createMockProEntitlement(userId, next));
-          this.setData({ toggling: false, isPro: next, planText: next ? 'Mock Pro' : '免费版' });
+          const nextEntitlement = createMockProEntitlement(userId, next);
+          await repository.setEntitlement(nextEntitlement);
+          this.setData({
+            toggling: false,
+            isPro: next,
+            planText: planLabel(nextEntitlement),
+          });
           wx.showToast({ title: next ? '已模拟开通' : '已关闭', icon: 'success' });
         } catch (error) {
           console.error('更新权益失败', error);
