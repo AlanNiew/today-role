@@ -31,9 +31,16 @@ Page({
   },
 
   async onLoad(options: Record<string, string | undefined>) {
-    const date = options.date && /^\d{4}-\d{2}-\d{2}$/.test(options.date) ? options.date : toDateKey(new Date());
+    const date =
+      options.date && /^\d{4}-\d{2}-\d{2}$/.test(options.date)
+        ? options.date
+        : toDateKey(new Date());
     const savedText =
-      options.saved === 'updated' ? '今天的记录已更新' : options.saved === 'created' ? '已记下今天的状态' : '';
+      options.saved === 'updated'
+        ? '今天的记录已更新'
+        : options.saved === 'created'
+          ? '已记下今天的状态'
+          : '';
     this.setData({ date, dateLabel: formatDateLabel(date), savedText });
 
     try {

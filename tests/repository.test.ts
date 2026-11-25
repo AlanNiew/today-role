@@ -21,13 +21,23 @@ function makeRepo() {
 
 test('同一天重复提交是更新，不新增记录', async () => {
   const { repository, tick } = makeRepo();
-  const created = await repository.upsertEntry({ date: '2026-11-18', status: '紧绷', scene: '工作', note: '开会' });
+  const created = await repository.upsertEntry({
+    date: '2026-11-18',
+    status: '紧绷',
+    scene: '工作',
+    note: '开会',
+  });
   assert.equal(created.created, true);
   assert.equal(created.entry.createdAt, 1_700_000_000_000);
   assert.equal(created.entry.id, 'u_test:2026-11-18');
 
   tick();
-  const updated = await repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '独处', note: '' });
+  const updated = await repository.upsertEntry({
+    date: '2026-11-18',
+    status: '平稳',
+    scene: '独处',
+    note: '',
+  });
   assert.equal(updated.created, false);
   assert.equal(updated.entry.id, 'u_test:2026-11-18');
   assert.equal(updated.entry.createdAt, 1_700_000_000_000);
@@ -42,7 +52,9 @@ test('同一天重复提交是更新，不新增记录', async () => {
 
 test('记录校验：日期 / 状态 / 场景 / 备注长度', async () => {
   const { repository } = makeRepo();
-  await assert.rejects(() => repository.upsertEntry({ date: '2026-02-30', status: '平稳', scene: '工作' }));
+  await assert.rejects(() =>
+    repository.upsertEntry({ date: '2026-02-30', status: '平稳', scene: '工作' }),
+  );
   await assert.rejects(() =>
     repository.upsertEntry({ date: '2026-11-18', status: '开心' as never, scene: '工作' }),
   );
@@ -50,7 +62,12 @@ test('记录校验：日期 / 状态 / 场景 / 备注长度', async () => {
     repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '公司' as never }),
   );
   await assert.rejects(() =>
-    repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '工作', note: '字'.repeat(101) }),
+    repository.upsertEntry({
+      date: '2026-11-18',
+      status: '平稳',
+      scene: '工作',
+      note: '字'.repeat(101),
+    }),
   );
   const ok = await repository.upsertEntry({
     date: '2026-11-18',
@@ -66,7 +83,10 @@ test('列表按日期升序，replaceEntries 去重并清理缓存', async () =>
   await repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '工作' });
   await repository.upsertEntry({ date: '2026-11-16', status: '紧绷', scene: '工作' });
   const sorted = await repository.listEntries();
-  assert.deepEqual(sorted.map((item) => item.date), ['2026-11-16', '2026-11-18']);
+  assert.deepEqual(
+    sorted.map((item) => item.date),
+    ['2026-11-16', '2026-11-18'],
+  );
 
   await repository.saveWeeklySnapshot({
     id: 'u_test:2026-11-16',
@@ -88,7 +108,12 @@ test('列表按日期升序，replaceEntries 去重并清理缓存', async () =>
 
 test('清空数据删除前缀下全部键，不影响其他应用键', async () => {
   const { repository } = makeRepo();
-  await repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '工作', note: '私人内容' });
+  await repository.upsertEntry({
+    date: '2026-11-18',
+    status: '平稳',
+    scene: '工作',
+    note: '私人内容',
+  });
   await repository.setEntitlement(createMockProEntitlement('u_test', true));
   await repository.saveWeeklySnapshot({
     id: 'u_test:2026-11-16',
@@ -110,7 +135,12 @@ test('清空数据删除前缀下全部键，不影响其他应用键', async ()
 
 test('导出 JSON 结构可读且包含记录 / 权益 / 快照', async () => {
   const { repository } = makeRepo();
-  await repository.upsertEntry({ date: '2026-11-18', status: '低电量', scene: '身体', note: '早睡' });
+  await repository.upsertEntry({
+    date: '2026-11-18',
+    status: '低电量',
+    scene: '身体',
+    note: '早睡',
+  });
   await repository.setEntitlement(createMockProEntitlement('u_test', true));
   const bundle = await repository.exportAll();
   assert.equal(bundle.schemaVersion, 1);

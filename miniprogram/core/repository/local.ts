@@ -1,12 +1,7 @@
 import { isValidDateKey } from '../date';
 import { createFreeEntitlement } from '../entitlement';
 import { isKnownScene, isKnownStatus, sortByDate } from '../stats';
-import type {
-  DailyEntry,
-  Entitlement,
-  MonthlyCard,
-  WeeklySnapshot,
-} from '../types';
+import type { DailyEntry, Entitlement, MonthlyCard, WeeklySnapshot } from '../types';
 import type {
   ExportBundle,
   KeyValueStorage,
@@ -46,7 +41,8 @@ export class LocalRepository implements Repository {
     this.prefix = options.prefix ?? DEFAULT_PREFIX;
     this.now = options.now ?? (() => Date.now());
     this.idFactory =
-      options.idFactory ?? (() => `u_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`);
+      options.idFactory ??
+      (() => `u_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`);
     this.fixedUserId = options.userId;
   }
 
@@ -245,7 +241,7 @@ export class LocalRepository implements Repository {
 
   async getWeeklySnapshot(weekStart: string): Promise<WeeklySnapshot | null> {
     const map = this.readJson<StoredMap<WeeklySnapshot>>('weekly', {});
-    return map && typeof map === 'object' ? map[weekStart] ?? null : null;
+    return map && typeof map === 'object' ? (map[weekStart] ?? null) : null;
   }
 
   async saveWeeklySnapshot(snapshot: WeeklySnapshot): Promise<void> {
@@ -258,7 +254,7 @@ export class LocalRepository implements Repository {
 
   async getMonthlyCard(month: string): Promise<MonthlyCard | null> {
     const map = this.readJson<StoredMap<MonthlyCard>>('monthly', {});
-    return map && typeof map === 'object' ? map[month] ?? null : null;
+    return map && typeof map === 'object' ? (map[month] ?? null) : null;
   }
 
   async saveMonthlyCard(card: MonthlyCard): Promise<void> {
@@ -289,7 +285,9 @@ export class LocalRepository implements Repository {
       exportedAt: new Date(this.now()).toISOString(),
       entries,
       entitlement,
-      weeklySnapshots: Object.values(weeklyMap ?? {}).sort((a, b) => (a.weekStart < b.weekStart ? -1 : 1)),
+      weeklySnapshots: Object.values(weeklyMap ?? {}).sort((a, b) =>
+        a.weekStart < b.weekStart ? -1 : 1,
+      ),
       monthlyCards: Object.values(monthlyMap ?? {}).sort((a, b) => (a.month < b.month ? -1 : 1)),
     };
   }

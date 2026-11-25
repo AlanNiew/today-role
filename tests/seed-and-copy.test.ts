@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { canUseFeature, createFreeEntitlement, createMockProEntitlement } from '../miniprogram/core/entitlement';
+import {
+  canUseFeature,
+  createFreeEntitlement,
+  createMockProEntitlement,
+} from '../miniprogram/core/entitlement';
 import { RuleBasedGenerator } from '../miniprogram/core/generator/rule-based';
 import { buildDemoEntries } from '../miniprogram/core/seed';
 import { BANNED_COPY } from './helpers';
@@ -21,7 +25,11 @@ test('演示数据覆盖最近 45 天，满足周 / 月门控且周内低点在�
   assert.equal(november.length, 18);
   assert.ok(october.length >= 3);
 
-  const weekly = await generator.generateWeeklySnapshot({ entries, today: TODAY, userId: 'u_demo' });
+  const weekly = await generator.generateWeeklySnapshot({
+    entries,
+    today: TODAY,
+    userId: 'u_demo',
+  });
   assert.equal(weekly.ok, true);
   if (weekly.ok) {
     assert.equal(weekly.value.patterns.length, 2);
@@ -51,7 +59,11 @@ test('演示数据 + 全部生成结果通过文案红线扫描，且带数字�
   const entries = buildDemoEntries('u_demo', TODAY);
   const todayEntry = entries[entries.length - 1];
   const fragment = await generator.generateTodayFragment({ entries, entry: todayEntry });
-  const weekly = await generator.generateWeeklySnapshot({ entries, today: TODAY, userId: 'u_demo' });
+  const weekly = await generator.generateWeeklySnapshot({
+    entries,
+    today: TODAY,
+    userId: 'u_demo',
+  });
   const monthly = await generator.generateMonthlyCard({
     entries,
     month: '2026-11',

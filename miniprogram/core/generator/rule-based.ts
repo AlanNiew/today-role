@@ -180,7 +180,7 @@ function buildPatternCounterIntuitive(entries: DailyEntry[], days: number): Patt
 
   const multiDayScenes = sceneStats(entries)
     .filter((item) => item.count >= 2)
-    .sort((a, b) => a.scene < b.scene ? -1 : 1);
+    .sort((a, b) => (a.scene < b.scene ? -1 : 1));
   if (multiDayScenes.length >= 2) {
     const byRange = [...multiDayScenes].sort(
       (a, b) => a.max - a.min - (b.max - b.min) || (a.scene < b.scene ? -1 : 1),
@@ -209,7 +209,13 @@ function buildPatternCounterIntuitive(entries: DailyEntry[], days: number): Patt
 }
 
 function buildTension(entries: DailyEntry[], distribution: Record<Status, number>): string {
-  let concentration: { status: Status; total: number; scene: Scene; count: number; ratio: number } | null = null;
+  let concentration: {
+    status: Status;
+    total: number;
+    scene: Scene;
+    count: number;
+    ratio: number;
+  } | null = null;
   for (const status of STATUSES) {
     const total = distribution[status];
     if (total < 2) {
@@ -254,7 +260,8 @@ function buildTension(entries: DailyEntry[], distribution: Record<Status, number
   const dominant = dominantStatus(entries);
   if (dominant && dominant.count >= 5) {
     const rare = STATUSES.filter(
-      (status) => status !== dominant.status && distribution[status] > 0 && distribution[status] <= 2,
+      (status) =>
+        status !== dominant.status && distribution[status] > 0 && distribution[status] <= 2,
     ).sort((a, b) => distribution[a] - distribution[b])[0];
     if (rare) {
       const rareEntries = entries.filter((entry) => entry.status === rare);
@@ -298,7 +305,11 @@ function buildActionSuggestion(entries: DailyEntry[], today: Date): string {
   return `本月已记录 ${uniqueRecordedDays(entries).length} 天，可以在每天记录后停 10 秒，看看当天最常出现的组合是否和预期一致。`;
 }
 
-function buildComparison(entries: DailyEntry[], month: string, days: number): MonthlyInsights['comparison'] {
+function buildComparison(
+  entries: DailyEntry[],
+  month: string,
+  days: number,
+): MonthlyInsights['comparison'] {
   const previousMonth = previousMonthKey(month);
   const previousEntries = filterByMonth(entries, previousMonth);
   const previousDays = uniqueRecordedDays(previousEntries).length;
@@ -428,7 +439,9 @@ function buildProInsights(input: MonthlyInsightsInput): MonthlyInsights {
   }
 
   if (mainScene) {
-    const sceneDistribution = countByStatus(monthEntries.filter((entry) => entry.scene === mainScene.scene));
+    const sceneDistribution = countByStatus(
+      monthEntries.filter((entry) => entry.scene === mainScene.scene),
+    );
     const topSceneStatus = STATUSES.filter((status) => sceneDistribution[status] > 0).sort(
       (a, b) => sceneDistribution[b] - sceneDistribution[a],
     )[0];
@@ -455,9 +468,7 @@ function buildProInsights(input: MonthlyInsightsInput): MonthlyInsights {
         )}，共 ${countText(bestScene.count)}），可以在连续工作日后主动留出类似时段。`,
       );
     } else {
-      actionPlan.push(
-        `本月记录 ${days} 天，继续保持每天 5 秒的记录节奏，月底再看分布变化。`,
-      );
+      actionPlan.push(`本月记录 ${days} 天，继续保持每天 5 秒的记录节奏，月底再看分布变化。`);
     }
   }
 
@@ -501,7 +512,9 @@ export class RuleBasedGenerator implements RoleGenerator {
     };
   }
 
-  async generateWeeklySnapshot(input: WeeklySnapshotInput): Promise<GenerationResult<WeeklySnapshot>> {
+  async generateWeeklySnapshot(
+    input: WeeklySnapshotInput,
+  ): Promise<GenerationResult<WeeklySnapshot>> {
     const windowEntries = recentEntries(input.entries, input.today, 7);
     const days = uniqueRecordedDays(windowEntries).length;
     if (days < 3) {

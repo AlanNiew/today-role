@@ -1,0 +1,25 @@
+# 依赖与构建产物
+node_modules/
+.tmp-test/
+coverage/
+dist/
+build/
+miniprogram_npm/
+
+# 微信开发者工具生成的 JS（由 TS 编译插件产出）
+miniprogram/**/*.js
+miniprogram/assets/
+
+# 工具生成 / 本地私有配置，不纳入格式化
+minitest/
+package-lock.json
+project.private.config.json
+# 由微信开发者工具重写格式，Prettier 不接管
+project.config.json
+
+# 任务书是只读需求来源，保持原文
+docs/project-brief.md
+
+# 杂项
+*.log
+.DS_Store

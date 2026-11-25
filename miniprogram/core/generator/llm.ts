@@ -13,8 +13,7 @@ import type {
   WeeklySnapshotInput,
 } from './types';
 
-const NOT_CONFIGURED =
-  'LLMGenerator 尚未接入。请继续使用 rule 模式，或先实现服务端代理后再切换。';
+const NOT_CONFIGURED = 'LLMGenerator 尚未接入。请继续使用 rule 模式，或先实现服务端代理后再切换。';
 
 /**
  * LLM 生成器占位。
@@ -29,7 +28,9 @@ export class LLMGenerator implements RoleGenerator {
     throw new Error(NOT_CONFIGURED);
   }
 
-  async generateWeeklySnapshot(_input: WeeklySnapshotInput): Promise<GenerationResult<WeeklySnapshot>> {
+  async generateWeeklySnapshot(
+    _input: WeeklySnapshotInput,
+  ): Promise<GenerationResult<WeeklySnapshot>> {
     throw new Error(NOT_CONFIGURED);
   }
 

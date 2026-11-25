@@ -14,32 +14,34 @@
 
 M1–M6 已完成：
 
-| 里程碑 | 内容 | 状态 |
-| --- | --- | --- |
-| M1 | 小程序脚手架、6 个页面、底部导航、Repository 抽象、本地存储实现 | ✅ |
-| M2 | 每日记录、同日更新、今日角色碎片（RuleBasedGenerator） | ✅ |
-| M3 | 最近 7 天周快照、3 天门控、2 个 Pattern、反常识规则 | ✅ |
-| M4 | 当月角色卡、10 天门控、状态分布 / Top 场景 / 张力 / 行动建议 | ✅ |
-| M5 | mock 付费页、isPro 开关、设置 / 隐私 / 清空 / 导出 | ✅ |
-| M6 | 规则单元测试、结构检查、手动测试清单、README | ✅ |
+| 里程碑 | 内容                                                            | 状态 |
+| ------ | --------------------------------------------------------------- | ---- |
+| M1     | 小程序脚手架、6 个页面、底部导航、Repository 抽象、本地存储实现 | ✅   |
+| M2     | 每日记录、同日更新、今日角色碎片（RuleBasedGenerator）          | ✅   |
+| M3     | 最近 7 天周快照、3 天门控、2 个 Pattern、反常识规则             | ✅   |
+| M4     | 当月角色卡、10 天门控、状态分布 / Top 场景 / 张力 / 行动建议    | ✅   |
+| M5     | mock 付费页、isPro 开关、设置 / 隐私 / 清空 / 导出              | ✅   |
+| M6     | 规则单元测试、结构检查、手动测试清单、README                    | ✅   |
+
+工程护栏：GitHub Actions CI、ESLint、Prettier，以及开发约束与踩坑记录见 `docs/development-notes.md`。
 
 ## 快速开始
 
 环境要求：
 
-- Node.js ≥ 20（仅用于类型检查、单元测试和项目结构检查；小程序运行不依赖 Node）
+- Node.js ≥ 22（仅用于类型检查、Lint、格式化、单元测试和项目结构检查；小程序运行不依赖 Node）
 - 微信开发者工具（稳定版即可）
 
 ```bash
 cd today-role
-npm install            # 安装 typescript、miniprogram-api-typings 等开发依赖
-npm run check          # 类型检查 + 单元测试 + 项目结构检查
+npm install            # 安装 typescript、miniprogram-api-typings、eslint、prettier 等开发依赖
+npm run check          # 类型检查 + Lint + 格式检查 + 单元测试 + 项目结构检查
 ```
 
 在微信开发者工具中：
 
 1. 选择「导入项目」，目录选 `today-role/` 根目录（不是 `miniprogram/`）。
-2. AppID 可先用测试号；`project.config.json` 中默认是 `touristappid`。
+2. `project.config.json` 中已配置 AppID `wx32d9039656d150d3`；若要换成自己的测试号，改 `appid` 或在导入时选择测试号即可。
 3. 工具识别 `miniprogramRoot: "miniprogram/"` 和 `useCompilerPlugins: ["typescript"]`，直接编译 TS，无需额外构建命令。
 4. 编译后从「记录」页开始，依次可进入今日结果、角色（周快照）、月卡、付费页、设置页。
 
@@ -47,12 +49,14 @@ npm run check          # 类型检查 + 单元测试 + 项目结构检查
 
 ## 命令
 
-| 命令 | 作用 |
-| --- | --- |
-| `npm run typecheck` | 用 `tsconfig.json` 检查小程序源码与全局类型 |
-| `npm test` | 编译 `miniprogram/core` + `tests` 到 `.tmp-test/`，用 Node 内置 test runner 跑规则测试 |
-| `npm run check:structure` | 校验 `app.json` 页面四件套、tabBar、JSON 语法、页面/事件基础一致性、文案红线词 |
-| `npm run check` | 以上三项全跑 |
+| 命令                      | 作用                                                                                   |
+| ------------------------- | -------------------------------------------------------------------------------------- |
+| `npm run typecheck`       | 用 `tsconfig.json` 检查小程序源码与全局类型                                            |
+| `npm run lint`            | ESLint 检查正确性问题（`lint:fix` 自动修复可修复项）                                   |
+| `npm run format`          | Prettier 写入格式（`format:check` 只检查、不改文件）                                   |
+| `npm test`                | 编译 `miniprogram/core` + `tests` 到 `.tmp-test/`，用 Node 内置 test runner 跑规则测试 |
+| `npm run check:structure` | 校验 `app.json` 页面四件套、tabBar、JSON 语法、页面/事件基础一致性、文案红线词         |
+| `npm run check`           | 以上五项全跑（与 CI 一致）                                                             |
 
 测试只覆盖与微信 API 解耦的 `miniprogram/core`（日期、聚合、生成规则、本地仓储、权益、种子数据），不依赖开发者工具。
 
@@ -60,8 +64,11 @@ npm run check          # 类型检查 + 单元测试 + 项目结构检查
 
 ```text
 today-role/
+├── .github/
+│   └── workflows/ci.yml          # CI：npm ci + npm run check（Node 22）
 ├── docs/
 │   ├── project-brief.md          # 需求任务书（只读）
+│   ├── development-notes.md      # 开发约束 / 踩坑记录 / 改动检查清单
 │   └── manual-test.md            # 手动测试清单
 ├── miniprogram/
 │   ├── app.ts / app.json / app.wxss
@@ -93,12 +100,15 @@ today-role/
 │   │   ├── monthly/              # 月角色卡
 │   │   ├── paywall/              # mock 付费权益
 │   │   └── settings/             # 设置 / 隐私 / 导出 / 清空（tab「我的」）
+├── minitest/                     # 微信开发者工具 minitest 配置（工具生成）
 ├── scripts/
 │   ├── check-structure.mjs       # 结构 + 文案红线扫描
 │   └── run-tests.mjs             # 跨平台收集并运行编译后的测试
 ├── tests/                        # Node 单元测试 + 端到端流程测试
 ├── typings/                      # 小程序全局类型与 IAppOption
-├── project.config.json
+├── eslint.config.mjs             # ESLint flat config
+├── .prettierrc.json / .prettierignore
+├── project.config.json           # 微信开发者工具项目配置
 ├── tsconfig.json                 # 小程序源码类型检查
 ├── tsconfig.test.json            # 核心 + 测试编译
 └── package.json
@@ -195,16 +205,16 @@ Pro 完整版（页面按 `isPro` 展示，不写入基础月卡）：
 
 ## 免费 / 付费分层
 
-| 能力 | 免费 | Mock Pro |
-| --- | --- | --- |
-| 每日记录 / 今日碎片 | ✅ | ✅ |
-| 周快照 2 个 Pattern | ✅ | ✅ |
-| 月卡：分布 / Top 场景 / 张力 | ✅ | ✅ |
-| 月卡：一句轻量建议 | ✅ | ✅ |
-| 月卡深度解读（共现 / 触发观察） | — | ✅ |
-| 本月 vs 上月历史对比 | — | ✅ |
-| 完整行动建议（3 条） | — | ✅ |
-| 导出 JSON | ✅ | ✅ |
+| 能力                            | 免费 | Mock Pro |
+| ------------------------------- | ---- | -------- |
+| 每日记录 / 今日碎片             | ✅   | ✅       |
+| 周快照 2 个 Pattern             | ✅   | ✅       |
+| 月卡：分布 / Top 场景 / 张力    | ✅   | ✅       |
+| 月卡：一句轻量建议              | ✅   | ✅       |
+| 月卡深度解读（共现 / 触发观察） | —    | ✅       |
+| 本月 vs 上月历史对比            | —    | ✅       |
+| 完整行动建议（3 条）            | —    | ✅       |
+| 导出 JSON                       | ✅   | ✅       |
 
 付费页只提供「模拟开通 / 关闭」按钮，写本机 `Entitlement`，不接微信支付、不产生任何费用。
 
@@ -263,6 +273,7 @@ MVP 默认 `LocalRepository`，键前缀 `today-role.v1.`，数据在 `wx.storag
 npm run check
 ```
 
+- 静态检查：`npm run lint`（ESLint）与 `npm run format:check`（Prettier）；CI 配置见 `.github/workflows/ci.yml`。
 - 单元测试：`tests/*.test.ts`，覆盖日期边界、同一天 upsert、周/月门控、反常识分支、数据锚点、Pro 内容、清空无残留、导出结构、文案红线。
 - 结构检查：`scripts/check-structure.mjs` 校验 `app.json` 中的每个页面都有 `.ts/.json/.wxml/.wxss`、tabBar 指向已注册页面、所有 JSON 可解析、WXML 事件绑定存在对应方法、源码不含诊断类词。
 - 手动测试：`docs/manual-test.md`，按 M1–M6 验收项逐步走。
@@ -283,3 +294,4 @@ npm run check
 - 周快照按「最近 7 天滚动窗口」而非自然周统计，`weekStart` 只用于缓存键。
 - 状态参考值是固定排序，不等于心理学量表；规则模板只做共现描述。
 - 云开发与 LLM 只有接口和切换点，未在本期实现。
+- 没有页面级自动化 e2e，页面行为依赖结构检查与手动测试清单。

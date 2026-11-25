@@ -21,7 +21,10 @@ function snapshotOf(value: unknown): WeeklySnapshot {
 }
 
 test('最近 7 天不足 3 天时返回门控信息', async () => {
-  const result = await weekly([entry('2026-11-21', '平稳', '工作'), entry('2026-11-22', '兴奋', '独处')]);
+  const result = await weekly([
+    entry('2026-11-21', '平稳', '工作'),
+    entry('2026-11-22', '兴奋', '独处'),
+  ]);
   assert.equal(result.ok, false);
   if (!result.ok) {
     assert.equal(result.code, 'not-enough-data');

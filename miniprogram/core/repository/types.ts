@@ -1,11 +1,4 @@
-import type {
-  DailyEntry,
-  Entitlement,
-  MonthlyCard,
-  Scene,
-  Status,
-  WeeklySnapshot,
-} from '../types';
+import type { DailyEntry, Entitlement, MonthlyCard, Scene, Status, WeeklySnapshot } from '../types';
 
 /** 最小 KV 抽象：小程序用 wx.storage，测试用内存实现，云端可实现为远程 API。 */
 export interface KeyValueStorage {

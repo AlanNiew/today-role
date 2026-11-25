@@ -81,9 +81,11 @@
 ## M6 测试与文档
 
 - [ ] `npm run typecheck` 无错误。
+- [ ] `npm run lint` 无错误；`npm run format:check` 通过。
 - [ ] `npm test` 全部用例通过（当前 32 个，包含端到端流程）。
 - [ ] `npm run check:structure` 通过：页面四件套、tabBar、WXML 标签 / 事件、文案红线、隐私入口、无网络调用。
-- [ ] README 的「快速开始」「命令」「数据层切换」「生成器切换」与项目实际一致。
+- [ ] `npm run check` 一条命令全绿（与 CI 一致）。
+- [ ] README 的「快速开始」「命令」「目录结构」「数据层切换」「生成器切换」与项目实际一致；开发约束与 `docs/development-notes.md` 一致。
 - [ ] 按 README 的「数据层：本地 / 云端切换」能把 `dataMode` 改为 `cloud` 并看到明确报错，而不是静默写本地。
 - [ ] 把 `generatorMode` 改为 `llm` 会得到明确未接入错误；改回 `rule` 恢复正常（仅验证切换点，不要求接入 LLM）。
 

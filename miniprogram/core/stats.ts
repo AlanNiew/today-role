@@ -40,7 +40,11 @@ export function sortByDate(entries: DailyEntry[]): DailyEntry[] {
 }
 
 /** 闭区间过滤：startKey <= date <= endKey */
-export function filterByRange(entries: DailyEntry[], startKey: string, endKey: string): DailyEntry[] {
+export function filterByRange(
+  entries: DailyEntry[],
+  startKey: string,
+  endKey: string,
+): DailyEntry[] {
   return sortByDate(entries.filter((entry) => entry.date >= startKey && entry.date <= endKey));
 }
 

@@ -8,12 +8,13 @@ export function createFreeEntitlement(userId: string): Entitlement {
 
 /** mock 开关：仅写本机，不接支付、不产生费用 */
 export function createMockProEntitlement(userId: string, enabled: boolean): Entitlement {
-  return enabled
-    ? { userId, isPro: true, plan: 'mock_pro' }
-    : createFreeEntitlement(userId);
+  return enabled ? { userId, isPro: true, plan: 'mock_pro' } : createFreeEntitlement(userId);
 }
 
-export function isProActive(entitlement: Entitlement | null | undefined, now = Date.now()): boolean {
+export function isProActive(
+  entitlement: Entitlement | null | undefined,
+  now = Date.now(),
+): boolean {
   if (!entitlement || !entitlement.isPro) {
     return false;
   }
@@ -28,7 +29,11 @@ export function canUseFeature(
   entitlement: Entitlement | null | undefined,
   now = Date.now(),
 ): boolean {
-  if (feature === 'monthly-deep' || feature === 'monthly-history' || feature === 'monthly-action-plan') {
+  if (
+    feature === 'monthly-deep' ||
+    feature === 'monthly-history' ||
+    feature === 'monthly-action-plan'
+  ) {
     return isProActive(entitlement, now);
   }
   return false;

@@ -108,7 +108,17 @@ for (const file of walk(miniRoot, ['.json'])) {
 
 // WXML：标签配对、表达式括号、事件处理器存在
 const handlerPattern = /bind[a-z]+="([A-Za-z0-9_]+)"/g;
-const allowedTags = new Set(['view', 'text', 'button', 'textarea', 'input', 'image', 'scroll-view', 'block', 'navigator']);
+const allowedTags = new Set([
+  'view',
+  'text',
+  'button',
+  'textarea',
+  'input',
+  'image',
+  'scroll-view',
+  'block',
+  'navigator',
+]);
 const wxmlFiles = walk(miniRoot, ['.wxml']);
 for (const file of wxmlFiles) {
   const content = readFileSync(file, 'utf8');

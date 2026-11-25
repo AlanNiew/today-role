@@ -82,7 +82,10 @@ test('月卡只统计当月记录', async () => {
   const result = await monthly(entries);
   assert.equal(result.ok, true);
   if (result.ok) {
-    const total = STATUSES.reduce((sum, status) => sum + result.value.statusDistribution[status], 0);
+    const total = STATUSES.reduce(
+      (sum, status) => sum + result.value.statusDistribution[status],
+      0,
+    );
     assert.equal(total, 10);
   }
 });
@@ -165,7 +168,11 @@ test('月卡所有公开文案都不含诊断 / 定性词，且均有锚点', as
     return;
   }
   const card = result.value;
-  for (const text of [card.tension ?? '', card.actionSuggestion ?? '', ...card.topScenes.map((item) => item.scene)]) {
+  for (const text of [
+    card.tension ?? '',
+    card.actionSuggestion ?? '',
+    ...card.topScenes.map((item) => item.scene),
+  ]) {
     assert.doesNotMatch(text, BANNED_COPY);
   }
 });
