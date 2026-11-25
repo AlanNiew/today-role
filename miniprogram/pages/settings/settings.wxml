@@ -21,8 +21,8 @@
         <view class="stat-block__label">本月记录</view>
       </view>
       <view class="stat-block">
-        <view class="stat-block__value">{{totalEntries}}</view>
-        <view class="stat-block__label">总条数</view>
+        <view class="stat-block__value">{{streak}}</view>
+        <view class="stat-block__label">连续记录</view>
       </view>
     </view>
     <view class="muted small" style="margin-top: 16rpx;">始于 {{firstDateLabel}}</view>
@@ -95,7 +95,7 @@
     </view>
   </view>
 
-  <view class="dev-card reveal reveal-5">
+  <view wx:if="{{showDevTools}}" class="dev-card reveal reveal-5">
     <view class="row-between">
       <view>
         <view class="section-title" style="color: #7a6a4f;">开发调试</view>

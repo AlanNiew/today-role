@@ -44,6 +44,10 @@ Page({
     selectedStatus: '' as Status | '',
     selectedScene: '' as Scene | '',
     note: '',
+    /** 已记录时展示「状态 × 场景」，方便扫一眼今天记了什么 */
+    todayCombo: '',
+    /** 备注默认收起，把主按钮留在首屏 */
+    noteExpanded: false,
     hasEntry: false,
     saving: false,
     loading: true,
@@ -67,6 +71,8 @@ Page({
         selectedStatus: entry ? entry.status : '',
         selectedScene: entry ? entry.scene : '',
         note: entry && entry.note ? entry.note : '',
+        todayCombo: entry ? `${entry.status} × ${entry.scene}` : '',
+        noteExpanded: Boolean(entry && entry.note),
         hasEntry: Boolean(entry),
         loading: false,
       });
@@ -103,11 +109,24 @@ Page({
     this.setData({ note: event.detail.value.slice(0, 100) });
   },
 
+  onExpandNote() {
+    this.setData({ noteExpanded: true });
+  },
+
+  onCollapseNote() {
+    this.setData({ noteExpanded: false });
+  },
+
+  /** 已记录时直接查看今日碎片，不必再保存一次 */
+  onOpenTodayResult() {
+    wx.navigateTo({ url: `/pages/today-result/today-result?date=${this.data.todayKey}` });
+  },
+
   async onSave() {
     if (this.data.saving) {
       return;
     }
-    const { selectedStatus, selectedScene, note, todayKey, hasEntry } = this.data;
+    const { selectedStatus, selectedScene, note } = this.data;
     if (!selectedStatus) {
       wx.showToast({ title: '先选一个状态', icon: 'none' });
       return;
@@ -117,18 +136,42 @@ Page({
       return;
     }
 
+    // 跨天保护：页面可能在前一天打开、过零点后才点保存。
+    // 这时按「此刻的日期」落库并刷新页头，避免把记录写到昨天。
+    const now = new Date();
+    const saveDate = toDateKey(now);
+    const crossedDay = saveDate !== this.data.todayKey;
+
     this.setData({ saving: true });
     try {
       const repository = getApp<IAppOption>().globalData.repository;
+      let hasEntry = this.data.hasEntry;
+      if (crossedDay) {
+        const existing = await repository.getEntry(saveDate);
+        hasEntry = Boolean(existing);
+        const saveDateValue = parseDateKey(saveDate);
+        this.setData({
+          todayKey: saveDate,
+          todayMonthDay: `${saveDateValue.getMonth() + 1}月${saveDateValue.getDate()}日`,
+          todayWeekday: weekdayLabel(saveDateValue),
+          greeting: greetingOf(now.getHours()),
+          todayCombo: existing ? `${existing.status} × ${existing.scene}` : '',
+          hasEntry,
+        });
+      }
+
       await repository.upsertEntry({
-        date: todayKey,
+        date: saveDate,
         status: selectedStatus,
         scene: selectedScene,
         note,
       });
       this.setData({ hasEntry: true, saving: false });
+      if (crossedDay) {
+        wx.showToast({ title: '已跨天，记录到今天', icon: 'none' });
+      }
       wx.navigateTo({
-        url: `/pages/today-result/today-result?date=${todayKey}&saved=${hasEntry ? 'updated' : 'created'}`,
+        url: `/pages/today-result/today-result?date=${saveDate}&saved=${hasEntry ? 'updated' : 'created'}`,
       });
     } catch (error) {
       console.error('保存记录失败', error);

@@ -1,23 +1,36 @@
 import { formatDateLabel, monthKey, pad2, toDateKey } from '../../core/date';
 import { isProActive, planLabel } from '../../core/entitlement';
+import { shouldShowDevTools } from '../../core/env';
 import { buildDemoEntries } from '../../core/seed';
-import { filterByMonth, uniqueRecordedDays } from '../../core/stats';
+import { currentStreak, filterByMonth, uniqueRecordedDays } from '../../core/stats';
+
+/** 读取运行环境；读不到时按开发环境处理，避免误隐藏调试入口。 */
+function readEnvVersion(): string {
+  try {
+    return wx.getAccountInfoSync().miniProgram.envVersion;
+  } catch {
+    return 'develop';
+  }
+}
 
 Page({
   data: {
     loading: true,
-    totalEntries: 0,
     recordedDays: 0,
     currentMonthDays: 0,
+    streak: 0,
     firstDateLabel: '还没有记录',
     isPro: false,
     planText: '免费版',
+    /** 仅开发者工具 / 体验版展示「载入演示数据」，正式版隐藏 */
+    showDevTools: false,
     exporting: false,
     clearing: false,
     seeding: false,
   },
 
   async onShow() {
+    this.setData({ showDevTools: shouldShowDevTools(readEnvVersion()) });
     await this.reloadSummary();
   },
 
@@ -26,12 +39,13 @@ Page({
       const repository = getApp<IAppOption>().globalData.repository;
       const entries = await repository.listEntries();
       const entitlement = await repository.getEntitlement();
-      const month = monthKey(new Date());
+      const today = new Date();
+      const month = monthKey(today);
       this.setData({
         loading: false,
-        totalEntries: entries.length,
         recordedDays: uniqueRecordedDays(entries).length,
         currentMonthDays: filterByMonth(entries, month).length,
+        streak: currentStreak(entries, today),
         firstDateLabel: entries.length > 0 ? formatDateLabel(entries[0].date) : '还没有记录',
         isPro: isProActive(entitlement),
         planText: planLabel(entitlement),
@@ -106,12 +120,11 @@ Page({
         try {
           const repository = getApp<IAppOption>().globalData.repository;
           await repository.clearAll();
-          const remaining = await repository.listEntries();
           this.setData({
             clearing: false,
-            totalEntries: remaining.length,
             recordedDays: 0,
             currentMonthDays: 0,
+            streak: 0,
             firstDateLabel: '还没有记录',
             isPro: false,
             planText: '免费版',
@@ -128,6 +141,11 @@ Page({
 
   onSeedDemo() {
     if (this.data.seeding) {
+      return;
+    }
+    // 双重保险：UI 已在正式版隐藏入口，这里再按环境拦截一次。
+    if (!shouldShowDevTools(readEnvVersion())) {
+      wx.showToast({ title: '正式版不提供演示数据', icon: 'none' });
       return;
     }
     wx.showModal({

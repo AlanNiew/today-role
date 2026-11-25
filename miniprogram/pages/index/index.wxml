@@ -12,7 +12,7 @@
     </view>
 
     <view class="hero__title">{{greeting}}，<text class="serif hero__accent">感觉如何？</text></view>
-    <view class="hero__sub">选状态与场景，5 秒生成今日碎片。</view>
+    <view class="hero__sub">{{hasEntry ? '今天记录了「' + todayCombo + '」' : '选状态与场景，5 秒生成今日碎片。'}}</view>
 
     <view class="hero__orbit"></view>
     <view class="hero__orbit-dot"></view>
@@ -64,7 +64,7 @@
     </view>
   </view>
 
-  <view class="card reveal reveal-4">
+  <view wx:if="{{noteExpanded}}" class="card reveal reveal-4">
     <view class="section-head">
       <view class="section-title">03 · 留一句话</view>
       <view class="counter">{{note.length}} / 100</view>
@@ -74,11 +74,24 @@
       value="{{note}}"
       maxlength="100"
       placeholder="可选。今天想记住的一个细节……"
-      placeholder-class="muted"
+      placeholder-class="placeholder"
       bindinput="onNoteInput"
       auto-height
     />
-    <view class="muted small" style="margin-top: 12rpx;">只保存在本机，也不会进入生成文案。</view>
+    <view class="row-between" style="margin-top: 12rpx;">
+      <view class="muted small">只保存在本机，也不会进入生成文案。</view>
+      <view class="note-collapse" hover-class="btn-hover" bindtap="onCollapseNote">收起</view>
+    </view>
+  </view>
+
+  <view wx:else class="card note-collapsed reveal reveal-4" hover-class="btn-hover" bindtap="onExpandNote">
+    <view class="row-between">
+      <view>
+        <view class="section-title">03 · 留一句话</view>
+        <view class="muted small note-collapsed__preview" style="margin-top: 6rpx;">{{note ? note : '可选，只保存在本机'}}</view>
+      </view>
+      <view class="note-collapsed__add">＋</view>
+    </view>
   </view>
 
   <view class="cta-block reveal reveal-5">
@@ -89,6 +102,12 @@
       disabled="{{saving || loading}}"
       bindtap="onSave"
     >{{hasEntry ? '更新今天的记录' : '保存今天的记录'}}</button>
+    <button
+      wx:if="{{hasEntry}}"
+      class="btn btn--link cta-link"
+      hover-class="btn-hover"
+      bindtap="onOpenTodayResult"
+    >查看今日碎片 ›</button>
     <view class="trust-line">只存在本机 · 不上传 · 随时可导出或清空</view>
   </view>
 </view>

@@ -6,7 +6,7 @@ import {
   type SceneCount,
   type Status,
 } from './types';
-import { parseDateKey, toDateKey, weekdayIndex, WEEKDAY_LABELS } from './date';
+import { addDays, parseDateKey, toDateKey, weekdayIndex, WEEKDAY_LABELS } from './date';
 
 /** 校验未知来源的值是否为已知状态（存储读取 / 事件 data 传入时用）。 */
 export function isKnownStatus(value: unknown): value is Status {
@@ -62,6 +62,29 @@ export function recentEntries(entries: DailyEntry[], today: Date, days: number):
 
 export function uniqueRecordedDays(entries: DailyEntry[]): string[] {
   return Array.from(new Set(entries.map((entry) => entry.date))).sort();
+}
+
+/**
+ * 连续记录天数（streak）。
+ *
+ * 以「今天」为起点往回数；若今天还没记录，则从昨天开始数（当天尚未记录时
+ * 不把连续记录清零）。中断一天即停止；没有可用记录时返回 0。
+ */
+export function currentStreak(entries: DailyEntry[], today: Date): number {
+  if (entries.length === 0) {
+    return 0;
+  }
+  const recorded = new Set(uniqueRecordedDays(entries));
+  let cursor = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  if (!recorded.has(toDateKey(cursor))) {
+    cursor = addDays(cursor, -1);
+  }
+  let streak = 0;
+  while (recorded.has(toDateKey(cursor))) {
+    streak += 1;
+    cursor = addDays(cursor, -1);
+  }
+  return streak;
 }
 
 export function countByStatus(entries: DailyEntry[]): Record<Status, number> {

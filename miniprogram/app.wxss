@@ -27,7 +27,7 @@ page {
 }
 
 .eyebrow {
-  color: #8a887b;
+  color: #6a6b60;
   font-size: 21rpx;
   font-weight: 600;
   letter-spacing: 5rpx;
@@ -45,12 +45,12 @@ page {
 }
 
 .muted {
-  color: #7c837a;
+  color: #5d665b;
   font-size: 26rpx;
 }
 
 .small {
-  font-size: 23rpx;
+  font-size: 25rpx;
 }
 
 .center {
@@ -112,16 +112,16 @@ page {
 }
 
 .section-title {
-  color: #6c7469;
-  font-size: 23rpx;
+  color: #556054;
+  font-size: 24rpx;
   font-weight: 600;
   letter-spacing: 4rpx;
   line-height: 1.4;
 }
 
 .section-note {
-  color: #99978a;
-  font-size: 22rpx;
+  color: #6b6f63;
+  font-size: 24rpx;
 }
 
 /* ---------- 标签 ---------- */
@@ -129,7 +129,7 @@ page {
 .tag {
   background: #f1ede2;
   border-radius: 999rpx;
-  color: #66705f;
+  color: #56604f;
   display: inline-flex;
   align-items: center;
   font-size: 21rpx;
@@ -157,8 +157,8 @@ page {
 
 .tag--outline {
   background: transparent;
-  border: 1rpx solid #d8cfbd;
-  color: #7c837a;
+  border: 1rpx solid #cfc5b1;
+  color: #636b5e;
 }
 
 /* ---------- 按钮 ---------- */
@@ -256,10 +256,26 @@ page {
 }
 
 .status-option.is-selected {
-  background: #f1f6ef;
-  border-color: #476c52;
-  box-shadow: 0 12rpx 26rpx rgba(71, 108, 82, 0.12);
+  background: #e7f1e3;
+  border-color: #3f6249;
+  box-shadow: 0 12rpx 26rpx rgba(63, 98, 73, 0.16);
   transform: translateY(-3rpx);
+}
+
+/* 选中态增加角标，避免只靠浅色描边区分（弱光 / 低对比屏） */
+.status-option.is-selected::after {
+  background: #3f6249;
+  border-radius: 50%;
+  color: #fbf6e9;
+  content: "✓";
+  font-size: 16rpx;
+  height: 26rpx;
+  line-height: 26rpx;
+  position: absolute;
+  right: 10rpx;
+  text-align: center;
+  top: 8rpx;
+  width: 26rpx;
 }
 
 .status-dot {
@@ -337,7 +353,7 @@ page {
 }
 
 .combo-label {
-  color: #989586;
+  color: #67665a;
   font-size: 21rpx;
   letter-spacing: 3rpx;
 }
@@ -357,8 +373,8 @@ page {
 }
 
 .trust-line {
-  color: #979487;
-  font-size: 22rpx;
+  color: #62685c;
+  font-size: 24rpx;
   letter-spacing: 1rpx;
   margin-top: 18rpx;
   text-align: center;
@@ -913,7 +929,7 @@ page {
 .mock-note {
   background: #fbf3e3;
   border-radius: 18rpx;
-  color: #8a6a3d;
+  color: #7a5b31;
   font-size: 22rpx;
   line-height: 1.65;
   margin-top: 18rpx;
@@ -969,8 +985,8 @@ page {
 }
 
 .stat-block__label {
-  color: #939084;
-  font-size: 20rpx;
+  color: #6b6f64;
+  font-size: 22rpx;
   margin-top: 2rpx;
 }
 
@@ -1046,14 +1062,14 @@ page {
 }
 
 .row-sub {
-  color: #99958a;
-  font-size: 22rpx;
+  color: #6b6f64;
+  font-size: 23rpx;
   line-height: 1.5;
   margin-top: 2rpx;
 }
 
 .row-arrow {
-  color: #b9b2a3;
+  color: #8f887a;
   font-size: 28rpx;
   margin-left: 12rpx;
 }
@@ -1063,7 +1079,7 @@ page {
 }
 
 .privacy-item {
-  color: #687166;
+  color: #566052;
   font-size: 25rpx;
   line-height: 1.75;
   padding-left: 24rpx;
@@ -1092,7 +1108,7 @@ page {
 /* ---------- 其他 ---------- */
 
 .empty {
-  color: #8d8b7e;
+  color: #63685c;
   padding: 64rpx 0;
   text-align: center;
 }
@@ -1105,8 +1121,8 @@ page {
 }
 
 .footer-note {
-  color: #9b978a;
-  font-size: 22rpx;
+  color: #666b5f;
+  font-size: 23rpx;
   line-height: 1.7;
   padding: 10rpx 16rpx 28rpx;
   text-align: center;
@@ -1129,8 +1145,13 @@ page {
   border-color: #b9c9b8;
 }
 
+/* 输入占位符：比正文浅，但仍在 4.5:1 以上 */
+.placeholder {
+  color: #7a8074;
+}
+
 .counter {
-  color: #a09c8e;
+  color: #6d7166;
   font-size: 21rpx;
   font-variant-numeric: tabular-nums;
 }

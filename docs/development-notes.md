@@ -42,6 +42,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 4. **新增页面必须注册且四件套齐全**：`app.json.pages` 登记，`.ts/.json/.wxml/.wxss` 都存在，页面 json 必须有 `navigationBarTitleText`，否则 `check:structure` 失败。
 5. **WXML 内置组件有白名单**（`scripts/check-structure.mjs` 的 `allowedTags`）：用新组件（如 `swiper`）前先登记，否则检查失败。
 6. **`project.config.json` 归微信开发者工具所有**：工具会重写其格式，Prettier 已忽略该文件，不要依赖它的排版。
+7. **「开发调试 / 载入演示数据」只在非正式版出现**：`core/env.ts` 的 `shouldShowDevTools` + 设置页 `wx.getAccountInfoSync().miniProgram.envVersion` 双重控制（UI 隐藏 + 调用拦截）。发布前不要为了省事绕过，否则真实用户可能覆盖自己的记录。
 
 ## 4. 文案与产品红线
 
@@ -59,6 +60,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 「哪一天」只认设备本地时区的 `YYYY-MM-DD`；不存 UTC 日期键。`createdAt/updatedAt` 仅审计。
 - 一周从周一开始；周快照是「最近 7 天滚动窗口」，`weekStart` 只作缓存键，不等于自然周统计。
 - 同一用户同一天只有一条记录；重复提交是更新（保留 `createdAt`，刷新 `updatedAt`）。
+- 连续记录（streak）由 `core/stats.ts` 的 `currentStreak` 计算：从今天往回数，今天还没记录时从昨天开始数（不清零）；断一天即停止。只用于展示，不参与生成文案。
 - 状态参考值（兴奋 5 → 麻木 0）只用于排序与找模式，不是心理量表。
 
 ## 6. 数据与存储
@@ -102,4 +104,3 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 月卡缓存只写不读（每次进入月卡页全量重算）；数据量小，暂不优化。
 - 没有存储 schema 迁移框架，仅靠 key 前缀 `v1` 与导出 `schemaVersion`。
 - Mock Pro 无真实支付、订单、退款能力。
-- 设置页「累计天数」与「总条数」在「同日唯一」约束下恒等，属 UI 冗余。
