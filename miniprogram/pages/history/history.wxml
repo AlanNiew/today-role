@@ -1,0 +1,52 @@
+<view class="page">
+  <view class="page-head reveal">
+    <view>
+      <view class="eyebrow">HISTORY</view>
+      <view class="display" style="margin-top: 6rpx;">历史记录</view>
+    </view>
+    <view class="tag tag--outline" wx:if="{{count > 0}}">{{count}} 条</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty">
+    <view class="empty-title">正在整理</view>
+    <view class="muted">把过往记录按月份摊开…</view>
+  </view>
+
+  <view wx:elif="{{count === 0}}" class="card center reveal reveal-2">
+    <view class="empty-title">还没有历史记录</view>
+    <view class="muted" style="margin: 12rpx 0 28rpx;">先记录今天，之后每天都能在这里回看。</view>
+    <button class="btn btn--primary" hover-class="btn-hover" bindtap="onGoRecord">去记录今天</button>
+  </view>
+
+  <block wx:else>
+    <view wx:for="{{groups}}" wx:key="month" class="history-group">
+      <view class="section-head">
+        <view class="section-title">{{item.monthLabel}}</view>
+        <view class="section-note">{{item.rows.length}} 条</view>
+      </view>
+      <view class="list-card">
+        <view
+          wx:for="{{item.rows}}"
+          wx:for-item="row"
+          wx:key="date"
+          class="history-row"
+          hover-class="btn-hover"
+          data-date="{{row.date}}"
+          bindtap="onOpenEntry"
+        >
+          <view class="history-row__date">
+            <text class="history-row__day">{{row.day}}</text>
+            <text class="history-row__weekday">{{row.weekday}}</text>
+          </view>
+          <view class="history-row__body">
+            <view class="history-row__combo">{{row.status}} × {{row.scene}}</view>
+            <view wx:if="{{row.note}}" class="history-row__note">{{row.note}}</view>
+          </view>
+          <view class="row-arrow">›</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="footer-note">只读取本机记录；点某一天可查看当天碎片。</view>
+</view>

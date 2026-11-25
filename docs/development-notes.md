@@ -31,6 +31,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 页面只做展示与交互：不直接调用 `wx.storage`，不拼业务文案。
 - 聚合、门控、文案生成全部放在 `core/`，这样才能在 Node 里单测。
 - 文案的唯一出口是 `RoleGenerator`（`generateTodayFragment` / `generateWeeklySnapshot` / `generateMonthlyCard` / `buildMonthlyInsights`）。
+- 结果页 `today-result` 同时承担「今日结果」和「历史回看」：`?mode=history` 为只读，复用同一个生成器；历史模式下不要新增编辑/保存入口，若要做补记请单独评审产品范围。
 - 新增能力优先加在 core 并在页面组装，不要在页面里复制统计逻辑。
 
 ## 3. 微信运行时的硬约束（历史踩坑）
@@ -102,5 +103,6 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 
 - 没有页面级自动化 e2e（可评估 `miniprogram-automator`，但依赖开发者工具登录与服务端口）。
 - 月卡缓存只写不读（每次进入月卡页全量重算）；数据量小，暂不优化。
+- 历史记录只读，不支持补记 / 编辑过去日期（`upsertEntry` 本身支持任意日期，缺 UI 与产品决策）。
 - 没有存储 schema 迁移框架，仅靠 key 前缀 `v1` 与导出 `schemaVersion`。
 - Mock Pro 无真实支付、订单、退款能力。

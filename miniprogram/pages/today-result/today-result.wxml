@@ -1,7 +1,7 @@
 <view class="page" wx:if="{{loading}}">
   <view class="empty">
     <view class="empty-title">正在生成</view>
-    <view class="muted">把你的记录变成今天的角色碎片…</view>
+    <view class="muted">{{isHistory ? '正在找回那天的记录…' : '把你的记录变成今天的角色碎片…'}}</view>
   </view>
 </view>
 
@@ -9,15 +9,17 @@
   <view class="card center">
     <view class="empty-title">这次没有生成成功</view>
     <view class="muted" style="margin: 12rpx 0 28rpx;">{{error}}</view>
-    <button class="btn btn--primary" hover-class="btn-hover" bindtap="onEdit">回到记录页</button>
+    <button wx:if="{{isHistory}}" class="btn btn--primary" hover-class="btn-hover" bindtap="onBack">返回历史记录</button>
+    <button wx:else class="btn btn--primary" hover-class="btn-hover" bindtap="onEdit">回到记录页</button>
   </view>
 </view>
 
 <view class="page" wx:elif="{{missing}}">
   <view class="card center">
-    <view class="empty-title">今天还没有记录</view>
-    <view class="muted" style="margin: 12rpx 0 28rpx;">先花 5 秒选一个状态和一个场景，碎片会立刻出现。</view>
-    <button class="btn btn--primary" hover-class="btn-hover" bindtap="onEdit">去记录</button>
+    <view class="empty-title">{{isHistory ? '那天没有记录' : '今天还没有记录'}}</view>
+    <view class="muted" style="margin: 12rpx 0 28rpx;">{{isHistory ? '这条记录可能已经被清空，返回列表看看其他日期。' : '先花 5 秒选一个状态和一个场景，碎片会立刻出现。'}}</view>
+    <button wx:if="{{isHistory}}" class="btn btn--primary" hover-class="btn-hover" bindtap="onBack">返回历史记录</button>
+    <button wx:else class="btn btn--primary" hover-class="btn-hover" bindtap="onEdit">去记录</button>
   </view>
 </view>
 
@@ -31,7 +33,7 @@
       <text>DAILY FRAGMENT</text>
       <text>{{dateLabel}}</text>
     </view>
-    <view class="result-kicker">今天的你更像</view>
+    <view class="result-kicker">{{isHistory ? '那天的你更像' : '今天的你更像'}}</view>
     <view class="result-label">{{label}}</view>
     <view class="result-rule"></view>
     <view class="result-desc">{{explanation}}</view>
@@ -53,7 +55,7 @@
     <view class="muted small" style="margin-top: 14rpx;">这句话只保存在本机，不会进入生成文案。</view>
   </view>
 
-  <view class="reveal reveal-3">
+  <view wx:if="{{!isHistory}}" class="reveal reveal-3">
     <view class="section-head">
       <view class="section-title">下一步</view>
       <view class="section-note">把一天连成一段</view>
@@ -79,6 +81,6 @@
     </view>
   </view>
 
-  <button class="btn btn--link" hover-class="btn-hover" bindtap="onEdit">修改今天的记录</button>
+  <button class="btn btn--link" hover-class="btn-hover" bindtap="onEdit">{{isHistory ? '回到今天' : '修改今天的记录'}}</button>
   <view class="footer-note">碎片只描述记录中的共现，不是性格判断，也不构成医疗建议。</view>
 </view>

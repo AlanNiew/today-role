@@ -23,6 +23,8 @@ Page({
     error: '',
     date: '',
     dateLabel: '',
+    /** 从「历史记录」进入的只读回看模式 */
+    isHistory: false,
     label: '',
     explanation: '',
     anchors: [] as AnchorItem[],
@@ -31,17 +33,19 @@ Page({
   },
 
   async onLoad(options: Record<string, string | undefined>) {
+    const isHistory = options.mode === 'history';
     const date =
       options.date && /^\d{4}-\d{2}-\d{2}$/.test(options.date)
         ? options.date
         : toDateKey(new Date());
-    const savedText =
-      options.saved === 'updated'
+    const savedText = isHistory
+      ? ''
+      : options.saved === 'updated'
         ? '今天的记录已更新'
         : options.saved === 'created'
           ? '已记下今天的状态'
           : '';
-    this.setData({ date, dateLabel: formatDateLabel(date), savedText });
+    this.setData({ date, dateLabel: formatDateLabel(date), savedText, isHistory });
 
     try {
       const app = getApp<IAppOption>();
@@ -68,6 +72,16 @@ Page({
 
   onEdit() {
     wx.switchTab({ url: '/pages/index/index' });
+  },
+
+  /** 历史回看模式下返回列表；没有上一页时回落到记录页 */
+  onBack() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+      wx.navigateBack();
+    } else {
+      wx.switchTab({ url: '/pages/index/index' });
+    }
   },
 
   onOpenWeekly() {

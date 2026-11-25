@@ -99,6 +99,7 @@ today-role/
 │   │   ├── weekly/               # 周快照（tab「角色」）
 │   │   ├── monthly/              # 月角色卡
 │   │   ├── paywall/              # mock 付费权益
+│   │   ├── history/              # 历史记录（按月回看，只读）
 │   │   └── settings/             # 设置 / 隐私 / 导出 / 清空（tab「我的」）
 ├── minitest/                     # 微信开发者工具 minitest 配置（工具生成）
 ├── scripts/
@@ -122,7 +123,8 @@ pages/index ──保存/更新──▶ LocalRepository ──▶ pages/today-r
      │                         ├─▶ pages/weekly  （最近 7 天 ≥3 天）
      │                         └─▶ pages/monthly （当月 ≥10 天）
      └── tab「我的」──▶ pages/settings（导出/清空/隐私/演示数据）
-                           └──▶ pages/paywall（mock Pro 开关）
+                           ├──▶ pages/paywall（mock Pro 开关）
+                           └──▶ pages/history（按月回看）──▶ today-result?mode=history（只读）
 ```
 
 - 页面通过 `getApp<IAppOption>().globalData` 取得 `repository` 与 `generator`，不直接碰 `wx.storage`。
@@ -139,6 +141,7 @@ pages/index ──保存/更新──▶ LocalRepository ──▶ pages/today-r
 - 状态有固定颜色（兴奋金、平稳绿、紧绷陶土、低电量蓝灰、烦躁玫红、麻木灰），分布条、周点阵复用同一套颜色。
 - 周快照用 7 个点阵显示哪几天有记录；月卡用深绿封面 + 彩色分布条；付费页用深绿 + 金色 Pro 标识。
 - 设置页顶部展示累计天数 / 本月记录 / 连续记录（streak）三个指标，不再重复展示恒等的「总条数」。
+- 历史记录页按月分组、日期倒序，每行显示日号 + 星期 + 「状态 × 场景」+ 备注单行省略；点击某天进入结果页的只读回看模式（`mode=history`），文案为「那天的你更像」，不显示「下一步」与编辑入口。
 - 底部 3 个 tab 使用本机 PNG 线性图标（普通 / 选中两套），不依赖网络图片。
 - 所有装饰（圆环、光晕、点阵、进度条）由 WXSS 绘制，没有外部插图或字体请求。
 - 入场使用 0.46s 的轻微上浮，不阻塞交互；降低动效偏好未单独适配（微信 WebView 不支持媒体查询时忽略）。

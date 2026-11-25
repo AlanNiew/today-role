@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { currentStreak } from '../miniprogram/core/stats';
+import { currentStreak, groupEntriesByMonthDesc } from '../miniprogram/core/stats';
 import { entry } from './helpers';
 
 const TODAY = new Date(2026, 10, 18);
@@ -58,4 +58,51 @@ test('连续记录：同一天重复记录只算一天', () => {
     entry('2026-11-18', '兴奋', '独处'),
   ];
   assert.equal(currentStreak(entries, TODAY), 2);
+});
+
+test('历史分组：空记录返回空数组', () => {
+  assert.deepEqual(groupEntriesByMonthDesc([]), []);
+});
+
+test('历史分组：月份新的在前，组内日期倒序', () => {
+  const entries = [
+    entry('2026-10-31', '低电量', '身体'),
+    entry('2026-11-01', '平稳', '工作'),
+    entry('2026-10-02', '紧绷', '工作'),
+    entry('2026-11-18', '兴奋', '独处'),
+    entry('2026-11-05', '烦躁', '关系'),
+  ];
+  const groups = groupEntriesByMonthDesc(entries);
+  assert.deepEqual(
+    groups.map((group) => group.month),
+    ['2026-11', '2026-10'],
+  );
+  assert.deepEqual(
+    groups[0].entries.map((item) => item.date),
+    ['2026-11-18', '2026-11-05', '2026-11-01'],
+  );
+  assert.deepEqual(
+    groups[1].entries.map((item) => item.date),
+    ['2026-10-31', '2026-10-02'],
+  );
+  // 分组不丢记录
+  assert.equal(
+    groups.reduce((sum, group) => sum + group.entries.length, 0),
+    entries.length,
+  );
+});
+
+test('历史分组：只有一个月时也按日期倒序', () => {
+  const entries = [
+    entry('2026-11-02', '平稳', '工作'),
+    entry('2026-11-20', '兴奋', '家庭'),
+    entry('2026-11-15', '低电量', '身体'),
+  ];
+  const groups = groupEntriesByMonthDesc(entries);
+  assert.equal(groups.length, 1);
+  assert.equal(groups[0].month, '2026-11');
+  assert.deepEqual(
+    groups[0].entries.map((item) => item.date),
+    ['2026-11-20', '2026-11-15', '2026-11-02'],
+  );
 });

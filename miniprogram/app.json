@@ -5,7 +5,8 @@
     "pages/settings/settings",
     "pages/today-result/today-result",
     "pages/monthly/monthly",
-    "pages/paywall/paywall"
+    "pages/paywall/paywall",
+    "pages/history/history"
   ],
   "window": {
     "navigationBarTitleText": "今日角色",

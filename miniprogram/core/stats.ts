@@ -87,6 +87,36 @@ export function currentStreak(entries: DailyEntry[], today: Date): number {
   return streak;
 }
 
+export interface MonthGroup {
+  /** YYYY-MM */
+  month: string;
+  /** 组内日期倒序（新的在前） */
+  entries: DailyEntry[];
+}
+
+/**
+ * 按自然月分组，新的月份在前；组内日期倒序。供「历史记录」页展示。
+ * 不做过滤：传入的就是仓储里的全部记录。
+ */
+export function groupEntriesByMonthDesc(entries: DailyEntry[]): MonthGroup[] {
+  const byMonth = new Map<string, DailyEntry[]>();
+  for (const entry of entries) {
+    const month = entry.date.slice(0, 7);
+    const list = byMonth.get(month);
+    if (list) {
+      list.push(entry);
+    } else {
+      byMonth.set(month, [entry]);
+    }
+  }
+  return Array.from(byMonth.entries())
+    .sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0))
+    .map(([month, list]) => ({
+      month,
+      entries: [...list].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)),
+    }));
+}
+
 export function countByStatus(entries: DailyEntry[]): Record<Status, number> {
   const result = {} as Record<Status, number>;
   for (const status of STATUSES) {

@@ -173,6 +173,10 @@ Page({
     });
   },
 
+  onOpenHistory() {
+    wx.navigateTo({ url: '/pages/history/history' });
+  },
+
   onOpenPaywall() {
     wx.navigateTo({ url: '/pages/paywall/paywall' });
   },

@@ -261,5 +261,5 @@ console.log('结构检查通过：');
 for (const note of notes) {
   console.log(`  ✓ ${note}`);
 }
-console.log('  ✓ 6 个页面四件套齐全，tabBar / sitemap / JSON 可解析');
+console.log(`  ✓ ${pages.length} 个页面四件套齐全，tabBar / sitemap / JSON 可解析`);
 console.log('  ✓ WXML 标签与事件绑定、文案红线、隐私入口、无网络调用');

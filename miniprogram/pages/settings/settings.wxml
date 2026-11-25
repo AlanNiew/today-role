@@ -33,6 +33,14 @@
     <view class="section-note">只在本机</view>
   </view>
   <view class="list-card reveal reveal-2">
+    <view class="list-row" hover-class="btn-hover" bindtap="onOpenHistory">
+      <view class="row-icon row-icon--sage">史</view>
+      <view class="row-body">
+        <view class="row-title">历史记录</view>
+        <view class="row-sub">按月份回看每天的记录与当天碎片</view>
+      </view>
+      <view class="row-arrow">›</view>
+    </view>
     <view class="list-row" hover-class="btn-hover" bindtap="onExport">
       <view class="row-icon row-icon--sage">↓</view>
       <view class="row-body">
