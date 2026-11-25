@@ -54,7 +54,7 @@
       <view class="cover-orbit"></view>
       <view class="row-between" style="position: relative; z-index: 1;">
         <view class="cover-eyebrow">MONTHLY · {{monthShort}}</view>
-        <view class="tag tag--dark">{{planText}}</view>
+        <view class="tag tag--dark" wx:if="{{showPro}}">{{planText}}</view>
       </view>
       <view class="cover-title">{{monthLabel}}</view>
       <view style="align-items: baseline; display: flex; margin-top: 14rpx; position: relative; z-index: 1;">
@@ -106,12 +106,14 @@
       <view class="action-text">{{actionSuggestion}}</view>
     </view>
 
-    <view class="section-head" style="margin-top: 40rpx;">
-      <view class="section-title">更深一层</view>
-      <view class="section-note">Mock 权益控制</view>
-    </view>
+    <!-- Mock Pro 深度内容只在开发者工具 / 体验版出现；正式版隐藏整段 -->
+    <block wx:if="{{showPro}}">
+      <view class="section-head" style="margin-top: 40rpx;">
+        <view class="section-title">更深一层</view>
+        <view class="section-note">Mock 权益控制</view>
+      </view>
 
-    <block wx:if="{{isPro && insights}}">
+      <block wx:if="{{isPro && insights}}">
       <view class="pro-panel reveal">
         <view class="row-between">
           <view class="cover-eyebrow">MOCK PRO · DEEP READ</view>
@@ -175,6 +177,7 @@
       <view class="pro-feature">3 条完整行动建议</view>
       <button class="btn btn--gold" style="margin-top: 26rpx;" hover-class="btn-hover" bindtap="onOpenPaywall">了解 Mock Pro</button>
     </view>
+    </block>
 
     <button class="btn btn--link" hover-class="btn-hover" bindtap="onGoRecord">补记 / 修改今天</button>
   </block>

@@ -1,17 +1,10 @@
+import { APP_CONFIG } from '../../config';
 import { formatDateLabel, monthKey, pad2, toDateKey } from '../../core/date';
 import { isProActive, planLabel } from '../../core/entitlement';
-import { shouldShowDevTools } from '../../core/env';
+import { shouldShowDevTools, shouldShowMockPro } from '../../core/env';
 import { buildDemoEntries } from '../../core/seed';
 import { currentStreak, filterByMonth, uniqueRecordedDays } from '../../core/stats';
-
-/** 读取运行环境；读不到时按开发环境处理，避免误隐藏调试入口。 */
-function readEnvVersion(): string {
-  try {
-    return wx.getAccountInfoSync().miniProgram.envVersion;
-  } catch {
-    return 'develop';
-  }
-}
+import { readEnvVersion } from '../../data/runtime-env';
 
 Page({
   data: {
@@ -22,15 +15,22 @@ Page({
     firstDateLabel: '还没有记录',
     isPro: false,
     planText: '免费版',
+    appVersion: APP_CONFIG.appVersion,
     /** 仅开发者工具 / 体验版展示「载入演示数据」，正式版隐藏 */
     showDevTools: false,
+    /** Mock Pro 只在开发者工具 / 体验版可见，正式版隐藏全部入口 */
+    showPro: false,
     exporting: false,
     clearing: false,
     seeding: false,
   },
 
   async onShow() {
-    this.setData({ showDevTools: shouldShowDevTools(readEnvVersion()) });
+    const envVersion = readEnvVersion();
+    this.setData({
+      showDevTools: shouldShowDevTools(envVersion),
+      showPro: shouldShowMockPro(envVersion),
+    });
     await this.reloadSummary();
   },
 
@@ -41,14 +41,15 @@ Page({
       const entitlement = await repository.getEntitlement();
       const today = new Date();
       const month = monthKey(today);
+      const showPro = this.data.showPro;
       this.setData({
         loading: false,
         recordedDays: uniqueRecordedDays(entries).length,
         currentMonthDays: filterByMonth(entries, month).length,
         streak: currentStreak(entries, today),
         firstDateLabel: entries.length > 0 ? formatDateLabel(entries[0].date) : '还没有记录',
-        isPro: isProActive(entitlement),
-        planText: planLabel(entitlement),
+        isPro: showPro && isProActive(entitlement),
+        planText: showPro ? planLabel(entitlement) : '免费版',
       });
     } catch (error) {
       console.error('读取本地统计失败', error);
@@ -178,6 +179,10 @@ Page({
   },
 
   onOpenPaywall() {
+    // 正式版不提供 Mock Pro，入口已隐藏；这里再做一次防御
+    if (!this.data.showPro) {
+      return;
+    }
     wx.navigateTo({ url: '/pages/paywall/paywall' });
   },
 

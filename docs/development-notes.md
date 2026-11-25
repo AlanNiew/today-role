@@ -44,6 +44,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 5. **WXML 内置组件有白名单**（`scripts/check-structure.mjs` 的 `allowedTags`）：用新组件（如 `swiper`）前先登记，否则检查失败。
 6. **`project.config.json` 归微信开发者工具所有**：工具会重写其格式，Prettier 已忽略该文件，不要依赖它的排版。
 7. **「开发调试 / 载入演示数据」只在非正式版出现**：`core/env.ts` 的 `shouldShowDevTools` + 设置页 `wx.getAccountInfoSync().miniProgram.envVersion` 双重控制（UI 隐藏 + 调用拦截）。发布前不要为了省事绕过，否则真实用户可能覆盖自己的记录。
+8. **「Mock Pro」与开发调试同规则**：`shouldShowMockPro` 在正式版隐藏付费页入口、设置页 Mock 权益行、月卡深度内容；环境读取统一走 `data/runtime-env.ts` 的 `readEnvVersion`，不要在页面里各写一份 `wx.getAccountInfoSync`。
 
 ## 4. 文案与产品红线
 
@@ -54,6 +55,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 禁止诊断、人格定性、治疗/医疗建议；健康相关统一用「状态参考值」。
 - `note` 不参与生成、不回显到生成文案；只在结果页展示给本人。
 - 免费层（记录、今日碎片、周快照、月卡基础版）永远不上锁；Pro 只加深解读。
+- 正式版（release）隐藏 Mock Pro 全部入口与深度内容（`shouldShowMockPro`）；发布前不要绕过，否则正式用户会看到「模拟开通 / 开发测试」占位文案。
 - 反常识规则宁可不命中，也不硬编故事（已实现为「暂无可验证的反常识模式」）。
 
 ## 5. 日期与统计口径
@@ -90,6 +92,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - [ ] 涉及日期、门控、仓储、统计时补了 `tests/` 单测
 - [ ] 手动走 `docs/manual-test.md` 中对应里程碑
 - [ ] 改了数据结构：迁移方案 + `schemaVersion` 同步
+- [ ] 发版前：`config.ts` 的 `appVersion` 与小程序后台版本一致；正式版（release）下开发调试与 Mock Pro 均隐藏
 - [ ] 提交前至少用微信开发者工具模拟器走一遍主流程（真机更佳）
 
 ## 9. 环境与可选工具
@@ -98,6 +101,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 微信开发者工具（稳定版）。本项目不含手写 JS 兜底，旧版工具不认识 TS 编译插件会失败。
 - 开发者工具自带 CLI（安装目录下的 `cli.bat`，本机为 `D:\Program Files (x86)\Tencent\微信web开发者工具\cli.bat`），可用于打开/preview/自动化。使用前需在工具设置中开启「服务端口」并登录，因此**不放进 CI**。
 - 单元测试只覆盖 `core/`（无 `wx` 依赖）；页面层由结构检查 + 手动清单兜底。
+- 设置页版本号来自 `miniprogram/config.ts` 的 `appVersion`（当前 `1.0.0`）；发版时与小程序后台提交的版本保持一致。
 
 ## 10. 已知技术债
 
@@ -105,4 +109,4 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 月卡缓存只写不读（每次进入月卡页全量重算）；数据量小，暂不优化。
 - 历史记录只读，不支持补记 / 编辑过去日期（`upsertEntry` 本身支持任意日期，缺 UI 与产品决策）。
 - 没有存储 schema 迁移框架，仅靠 key 前缀 `v1` 与导出 `schemaVersion`。
-- Mock Pro 无真实支付、订单、退款能力。
+- Mock Pro 只在开发者工具 / 体验版可见，无真实支付、订单、退款能力。

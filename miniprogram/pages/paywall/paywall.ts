@@ -1,4 +1,6 @@
 import { createMockProEntitlement, isProActive, planLabel } from '../../core/entitlement';
+import { shouldShowMockPro } from '../../core/env';
+import { readEnvVersion } from '../../data/runtime-env';
 
 Page({
   data: {
@@ -9,6 +11,11 @@ Page({
   },
 
   async onShow() {
+    // 正式版不提供 Mock Pro：入口已全部隐藏，这里防御直接打开
+    if (!shouldShowMockPro(readEnvVersion())) {
+      wx.switchTab({ url: '/pages/settings/settings' });
+      return;
+    }
     this.setData({ loading: true });
     try {
       const repository = getApp<IAppOption>().globalData.repository;

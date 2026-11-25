@@ -1,8 +1,10 @@
 import { monthKey, monthLabel } from '../../core/date';
 import { isProActive, planLabel } from '../../core/entitlement';
+import { shouldShowMockPro } from '../../core/env';
 import { filterByMonth, percent, uniqueRecordedDays } from '../../core/stats';
 import type { MonthlyInsights, SceneCount, Status } from '../../core/types';
 import { STATUSES } from '../../core/types';
+import { readEnvVersion } from '../../data/runtime-env';
 
 interface DistributionRow {
   status: Status;
@@ -42,6 +44,8 @@ Page({
     actionSuggestion: '',
     isPro: false,
     planText: '免费版',
+    /** Mock Pro 只在开发者工具 / 体验版可见，正式版隐藏深度内容与 Pro 文案 */
+    showPro: false,
     insights: null as MonthlyInsights | null,
   },
 
@@ -56,6 +60,7 @@ Page({
       actionSuggestion: '',
       isPro: false,
       planText: '免费版',
+      showPro: false,
       insights: null,
     });
     try {
@@ -90,7 +95,8 @@ Page({
       const card = result.value;
       await repository.saveMonthlyCard(card);
       const entitlement = await repository.getEntitlement();
-      const pro = isProActive(entitlement);
+      const showPro = shouldShowMockPro(readEnvVersion());
+      const pro = showPro && isProActive(entitlement);
 
       let insights: MonthlyInsights | null = null;
       if (pro) {
@@ -132,7 +138,8 @@ Page({
         tension: card.tension ?? '',
         actionSuggestion: card.actionSuggestion ?? '',
         isPro: pro,
-        planText: planLabel(entitlement),
+        planText: showPro ? planLabel(entitlement) : '免费版',
+        showPro,
         insights,
       });
     } catch (error) {
@@ -150,6 +157,9 @@ Page({
   },
 
   onOpenPaywall() {
+    if (!this.data.showPro) {
+      return;
+    }
     wx.navigateTo({ url: '/pages/paywall/paywall' });
   },
 });
