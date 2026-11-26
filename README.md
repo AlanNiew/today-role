@@ -69,7 +69,10 @@ today-role/
 ├── docs/
 │   ├── project-brief.md          # 需求任务书（只读）
 │   ├── development-notes.md      # 开发约束 / 踩坑记录 / 改动检查清单
-│   └── manual-test.md            # 手动测试清单
+│   ├── manual-test.md            # 手动测试清单
+│   └── release/
+│       ├── platform-setup.md     # 小程序平台填写包（名称/头像/简介/类目/隐私/备案/提审）
+│       └── assets/               # 小程序头像（512 / 144 / 1024）
 ├── miniprogram/
 │   ├── app.ts / app.json / app.wxss
 │   ├── sitemap.json
@@ -317,7 +320,7 @@ wx.removeStorageSync('today-role.dev.unlock');
 
 代码侧 `npm run check` 全绿 ≠ 可以直接上线，发布前还要确认：
 
-1. **平台**：小程序备案（ICP）、服务类目、名称 / 头像 / 简介、隐私保护指引（本项目不收集个人信息，仍需在后台声明）、成员与体验成员权限。
+1. **平台**：小程序备案（ICP）、服务类目、名称 / 头像 / 简介、隐私保护指引（本项目不收集个人信息，仍需在后台声明）、成员与体验成员权限。可直接照 `docs/release/platform-setup.md` 的填写包操作（含名称候选、简介文案、头像文件、类目选择、隐私指引与备案材料、提审说明）。
 2. **体验版**：开发者工具「上传」→ 小程序后台设为体验版 → 按 `docs/manual-test.md` 真机回归（iOS / Android 各一台，含 320px 窄屏与大字体）。
 3. **正式版行为**：调试面板与 Mock Pro 默认全部隐藏（本机解锁机制，不依赖 `envVersion`）；设置页版本号来自 `config.ts` 的 `appVersion`，提交前与后台版本保持一致。发布包不包含解锁值，审核员看到的也是干净版本。
 4. **基础库**：开发者工具选择当前稳定基础库，后台设置合理的最低基础库后再真机复测。
