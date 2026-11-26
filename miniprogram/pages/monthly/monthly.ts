@@ -1,10 +1,9 @@
 import { monthKey, monthLabel } from '../../core/date';
 import { isProActive, planLabel } from '../../core/entitlement';
-import { shouldShowMockPro } from '../../core/env';
 import { filterByMonth, percent, uniqueRecordedDays } from '../../core/stats';
 import type { MonthlyInsights, SceneCount, Status } from '../../core/types';
 import { STATUSES } from '../../core/types';
-import { readEnvVersion } from '../../data/runtime-env';
+import { readDevUnlock } from '../../data/dev-unlock';
 
 interface DistributionRow {
   status: Status;
@@ -95,7 +94,7 @@ Page({
       const card = result.value;
       await repository.saveMonthlyCard(card);
       const entitlement = await repository.getEntitlement();
-      const showPro = shouldShowMockPro(readEnvVersion());
+      const showPro = readDevUnlock();
       const pro = showPro && isProActive(entitlement);
 
       let insights: MonthlyInsights | null = null;

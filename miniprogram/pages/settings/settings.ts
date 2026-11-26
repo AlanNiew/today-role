@@ -1,10 +1,9 @@
 import { APP_CONFIG } from '../../config';
 import { formatDateLabel, monthKey, pad2, toDateKey } from '../../core/date';
 import { isProActive, planLabel } from '../../core/entitlement';
-import { shouldShowDevTools, shouldShowMockPro } from '../../core/env';
 import { buildDemoEntries } from '../../core/seed';
 import { currentStreak, filterByMonth, uniqueRecordedDays } from '../../core/stats';
-import { readEnvVersion } from '../../data/runtime-env';
+import { readDevUnlock } from '../../data/dev-unlock';
 
 Page({
   data: {
@@ -16,9 +15,9 @@ Page({
     isPro: false,
     planText: '免费版',
     appVersion: APP_CONFIG.appVersion,
-    /** 仅开发者工具 / 体验版展示「载入演示数据」，正式版隐藏 */
+    /** 仅本机解锁后展示「载入演示数据」；默认所有环境隐藏 */
     showDevTools: false,
-    /** Mock Pro 只在开发者工具 / 体验版可见，正式版隐藏全部入口 */
+    /** Mock Pro 与本机解锁同规则，默认所有环境隐藏 */
     showPro: false,
     exporting: false,
     clearing: false,
@@ -26,11 +25,8 @@ Page({
   },
 
   async onShow() {
-    const envVersion = readEnvVersion();
-    this.setData({
-      showDevTools: shouldShowDevTools(envVersion),
-      showPro: shouldShowMockPro(envVersion),
-    });
+    const devUnlocked = readDevUnlock();
+    this.setData({ showDevTools: devUnlocked, showPro: devUnlocked });
     await this.reloadSummary();
   },
 
@@ -144,9 +140,9 @@ Page({
     if (this.data.seeding) {
       return;
     }
-    // 双重保险：UI 已在正式版隐藏入口，这里再按环境拦截一次。
-    if (!shouldShowDevTools(readEnvVersion())) {
-      wx.showToast({ title: '正式版不提供演示数据', icon: 'none' });
+    // 双重保险：UI 默认隐藏，这里再按本机解锁状态拦截一次。
+    if (!readDevUnlock()) {
+      wx.showToast({ title: '演示数据未解锁', icon: 'none' });
       return;
     }
     wx.showModal({

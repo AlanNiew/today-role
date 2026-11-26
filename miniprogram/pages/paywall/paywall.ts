@@ -1,6 +1,5 @@
 import { createMockProEntitlement, isProActive, planLabel } from '../../core/entitlement';
-import { shouldShowMockPro } from '../../core/env';
-import { readEnvVersion } from '../../data/runtime-env';
+import { readDevUnlock } from '../../data/dev-unlock';
 
 Page({
   data: {
@@ -11,8 +10,8 @@ Page({
   },
 
   async onShow() {
-    // 正式版不提供 Mock Pro：入口已全部隐藏，这里防御直接打开
-    if (!shouldShowMockPro(readEnvVersion())) {
+    // Mock Pro 默认全环境隐藏，只有本机解锁（开发调试）才可达
+    if (!readDevUnlock()) {
       wx.switchTab({ url: '/pages/settings/settings' });
       return;
     }

@@ -1,33 +1,24 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { isReleaseEnv, shouldShowDevTools, shouldShowMockPro } from '../miniprogram/core/env';
+import { DEV_UNLOCK_KEY, isDevUnlocked } from '../miniprogram/core/env';
 
-test('正式版判定：只有 release 为真，其余按非正式版处理', () => {
-  assert.equal(isReleaseEnv('release'), true);
-  assert.equal(isReleaseEnv('develop'), false);
-  assert.equal(isReleaseEnv('trial'), false);
-  assert.equal(isReleaseEnv(''), false);
-  assert.equal(isReleaseEnv(null), false);
-  assert.equal(isReleaseEnv(undefined), false);
+test('调试开关 key 固定，避免和业务数据前缀混在一起', () => {
+  assert.equal(DEV_UNLOCK_KEY, 'today-role.dev.unlock');
 });
 
-test('开发调试区：正式版隐藏，开发/体验版保留', () => {
-  assert.equal(shouldShowDevTools('release'), false);
-  assert.equal(shouldShowDevTools('develop'), true);
-  assert.equal(shouldShowDevTools('trial'), true);
+test('解锁值判定：boolean / number / string 三种写入方式都识别', () => {
+  assert.equal(isDevUnlocked(true), true);
+  assert.equal(isDevUnlocked(1), true);
+  assert.equal(isDevUnlocked('1'), true);
 });
 
-test('Mock Pro 入口：正式版隐藏，开发/体验版保留', () => {
-  assert.equal(shouldShowMockPro('release'), false);
-  assert.equal(shouldShowMockPro('develop'), true);
-  assert.equal(shouldShowMockPro('trial'), true);
-});
-
-test('环境值缺失时按开发环境处理，不静默隐藏调试入口', () => {
-  assert.equal(shouldShowDevTools(''), true);
-  assert.equal(shouldShowDevTools(null), true);
-  assert.equal(shouldShowDevTools(undefined), true);
-  assert.equal(shouldShowDevTools('unknown'), true);
-  assert.equal(shouldShowMockPro(''), true);
-  assert.equal(shouldShowMockPro(null), true);
+test('未解锁与异常值一律按未解锁处理', () => {
+  assert.equal(isDevUnlocked(false), false);
+  assert.equal(isDevUnlocked(0), false);
+  assert.equal(isDevUnlocked('0'), false);
+  assert.equal(isDevUnlocked(''), false);
+  assert.equal(isDevUnlocked(null), false);
+  assert.equal(isDevUnlocked(undefined), false);
+  assert.equal(isDevUnlocked('true'), false);
+  assert.equal(isDevUnlocked({}), false);
 });
