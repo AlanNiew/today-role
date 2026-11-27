@@ -172,3 +172,10 @@
 .home-page .note-collapsed {
   padding: 20rpx 30rpx;
 }
+
+/* 01/02 的「说明」入口：唤起状态/场景定义，不占用首屏高度 */
+.section-help {
+  border-bottom: 1rpx dashed #8f978a;
+  color: #4f5c52;
+  padding-bottom: 2rpx;
+}

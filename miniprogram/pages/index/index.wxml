@@ -21,7 +21,10 @@
   <view class="card reveal reveal-2">
     <view class="section-head">
       <view class="section-title">01 · 今天的状态</view>
-      <view class="section-note">单选</view>
+      <view class="section-note">
+        <text class="section-help" hover-class="btn-hover" bindtap="onShowStatusHelp">说明</text>
+        <text> · 单选</text>
+      </view>
     </view>
     <view class="status-grid">
       <view
@@ -40,8 +43,11 @@
 
   <view class="card reveal reveal-3">
     <view class="section-head">
-      <view class="section-title">02 · 发生在哪里</view>
-      <view class="section-note">单选</view>
+      <view class="section-title">02 · 主要和什么有关</view>
+      <view class="section-note">
+        <text class="section-help" hover-class="btn-hover" bindtap="onShowSceneHelp">说明</text>
+        <text> · 单选</text>
+      </view>
     </view>
     <view class="scene-grid">
       <view

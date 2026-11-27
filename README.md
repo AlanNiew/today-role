@@ -41,7 +41,7 @@ npm run check          # 类型检查 + Lint + 格式检查 + 单元测试 + 项
 在微信开发者工具中：
 
 1. 选择「导入项目」，目录选 `today-role/` 根目录（不是 `miniprogram/`）。
-2. `project.config.json` 中已配置 AppID `wx32d9039656d150d3`；若要换成自己的测试号，改 `appid` 或在导入时选择测试号即可。
+2. `project.config.json` 中已配置 AppID `wxa1ec97c3aece4bea`（小程序名「今天什么角色」）；若要换成自己的测试号，改 `appid` 或在导入时选择测试号即可。
 3. 工具识别 `miniprogramRoot: "miniprogram/"` 和 `useCompilerPlugins: ["typescript"]`，直接编译 TS，无需额外构建命令。
 4. 编译后从「记录」页开始，依次可进入今日结果、角色（周快照）、月卡、付费页、设置页。
 

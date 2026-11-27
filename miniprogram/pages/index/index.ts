@@ -1,6 +1,6 @@
 import { parseDateKey, toDateKey, weekdayLabel } from '../../core/date';
 import { isKnownScene, isKnownStatus } from '../../core/stats';
-import { SCENES, STATUSES, type Scene, type Status } from '../../core/types';
+import { SCENES, type Scene, type Status } from '../../core/types';
 
 type TapEvent = { currentTarget: { dataset: { value?: string } } };
 type NoteEvent = { detail: { value: string } };
@@ -14,7 +14,18 @@ const STATUS_TONES: Record<Status, string> = {
   麻木: 'numb',
 };
 
-const STATUS_OPTIONS = STATUSES.map((label) => ({ label, tone: STATUS_TONES[label] }));
+/** 展示顺序：上排高唤醒、下排低唤醒，让 2×3 网格本身可被理解 */
+const STATUS_GRID_ORDER: Status[] = ['兴奋', '紧绷', '烦躁', '平稳', '低电量', '麻木'];
+
+const STATUS_HELP =
+  '平稳＝心情没有大起伏；兴奋＝有劲、开心；紧绷＝心里发紧、放不下；' +
+  '烦躁＝容易上火、被打断；低电量＝累但还有感觉；麻木＝暂时没什么感觉。';
+
+const SCENE_HELP =
+  '工作＝工作或学习；关系＝朋友/伴侣/同事；家庭＝家人；' +
+  '独处＝一个人待着；身体＝睡眠/运动/饮食/身体感受。';
+
+const STATUS_OPTIONS = STATUS_GRID_ORDER.map((label) => ({ label, tone: STATUS_TONES[label] }));
 const SCENE_OPTIONS = SCENES.map((label) => ({ label }));
 
 function greetingOf(hour: number): string {
@@ -103,6 +114,24 @@ Page({
       return;
     }
     this.setData({ selectedScene: value });
+  },
+
+  onShowStatusHelp() {
+    wx.showModal({
+      title: '状态怎么选',
+      content: STATUS_HELP,
+      showCancel: false,
+      confirmText: '知道了',
+    });
+  },
+
+  onShowSceneHelp() {
+    wx.showModal({
+      title: '场景怎么选',
+      content: SCENE_HELP,
+      showCancel: false,
+      confirmText: '知道了',
+    });
   },
 
   onNoteInput(event: NoteEvent) {
