@@ -67,9 +67,12 @@ today-role/
 ├── .github/
 │   └── workflows/ci.yml          # CI：npm ci + npm run check（Node 22）
 ├── docs/
-│   ├── project-brief.md          # 需求任务书（只读）
+│   ├── project-brief.md          # 需求任务书（只读，v1.0 基线）
 │   ├── development-notes.md      # 开发约束 / 踩坑记录 / 改动检查清单
 │   ├── manual-test.md            # 手动测试清单
+│   ├── product/
+│   │   ├── taxonomy-review.md    # 01/02 状态×场景评审与 v1.1 决策
+│   │   └── v1.1-plan.md          # v1.1 分类升级执行方案（40 格标签 / 迁移 / 测试）
 │   └── release/
 │       ├── platform-setup.md     # 小程序平台填写包（名称/头像/简介/类目/隐私/备案/提审）
 │       └── assets/               # 小程序头像（512 / 144 / 1024）
