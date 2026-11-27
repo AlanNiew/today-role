@@ -116,6 +116,6 @@
   </view>
 
   <view class="footer-note">
-    今日角色 v{{appVersion}} · 数据 schema 1 · 非医疗建议
+    今日角色 v{{appVersion}} · 数据 schema 2 · 非医疗建议
   </view>
 </view>

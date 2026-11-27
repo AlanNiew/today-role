@@ -20,13 +20,15 @@ export function isKnownScene(value: unknown): value is Scene {
 
 /**
  * 仅用于「找模式 / 排序」的参考值，不是心理量表。
- * 兴奋 5 → 麻木 0。
+ * v1.1：兴奋 7 → 麻木 0（含 开心 / 低落 两格）。
  */
 export const STATUS_SCORE: Record<Status, number> = {
-  兴奋: 5,
-  平稳: 4,
-  紧绷: 3,
-  烦躁: 2,
+  兴奋: 7,
+  开心: 6,
+  平稳: 5,
+  紧绷: 4,
+  烦躁: 3,
+  低落: 2,
   低电量: 1,
   麻木: 0,
 };

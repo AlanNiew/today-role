@@ -1,5 +1,6 @@
 import { isValidDateKey } from '../date';
 import { createFreeEntitlement } from '../entitlement';
+import { migrateEntries, TAXONOMY_VERSION } from '../migration';
 import { isKnownScene, isKnownStatus, sortByDate } from '../stats';
 import type { DailyEntry, Entitlement, MonthlyCard, WeeklySnapshot } from '../types';
 import type {
@@ -44,10 +45,48 @@ export class LocalRepository implements Repository {
       options.idFactory ??
       (() => `u_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`);
     this.fixedUserId = options.userId;
+    this.migrateTaxonomyOnce();
   }
 
   private key(name: string): string {
     return `${this.prefix}${name}`;
+  }
+
+  /**
+   * v1.0 → v1.1 一次性迁移：场景改名（工作→工作/学习、关系→人际），
+   * 清空周/月派生缓存，并写入 meta.taxonomyVersion 保证幂等。
+   * 解析失败时保留原数据，下次启动再试，不阻断使用。
+   */
+  private migrateTaxonomyOnce(): void {
+    const metaKey = this.key('meta');
+    const rawMeta = this.storage.get(metaKey);
+    let version = 0;
+    if (rawMeta) {
+      try {
+        version = (JSON.parse(rawMeta) as { taxonomyVersion?: number }).taxonomyVersion ?? 0;
+      } catch {
+        version = 0;
+      }
+    }
+    if (version >= TAXONOMY_VERSION) {
+      return;
+    }
+
+    const rawEntries = this.storage.get(this.key('entries'));
+    if (rawEntries) {
+      try {
+        const result = migrateEntries(JSON.parse(rawEntries));
+        if (result.changed > 0) {
+          this.storage.set(this.key('entries'), JSON.stringify(result.entries));
+        }
+      } catch {
+        // 保留原数据，等下次启动重试
+      }
+    }
+
+    this.storage.remove(this.key('weekly'));
+    this.storage.remove(this.key('monthly'));
+    this.storage.set(metaKey, JSON.stringify({ taxonomyVersion: TAXONOMY_VERSION }));
   }
 
   private readJson<T>(name: string, fallback: T): T {
@@ -280,7 +319,7 @@ export class LocalRepository implements Repository {
     const weeklyMap = this.readJson<StoredMap<WeeklySnapshot>>('weekly', {});
     const monthlyMap = this.readJson<StoredMap<MonthlyCard>>('monthly', {});
     return {
-      schemaVersion: 1,
+      schemaVersion: 2,
       app: 'today-role',
       exportedAt: new Date(this.now()).toISOString(),
       entries,

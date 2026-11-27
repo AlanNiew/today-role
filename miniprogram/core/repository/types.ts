@@ -21,7 +21,7 @@ export interface UpsertEntryResult {
 }
 
 export interface ExportBundle {
-  schemaVersion: 1;
+  schemaVersion: 2;
   app: 'today-role';
   exportedAt: string;
   entries: DailyEntry[];

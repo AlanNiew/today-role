@@ -18,7 +18,7 @@ test('演示数据覆盖最近 45 天，满足周 / 月门控且周内低点在�
   assert.equal(new Set(entries.map((item) => item.date)).size, 45);
   assert.equal(entries[entries.length - 1].date, '2026-11-18');
   assert.equal(entries[entries.length - 1].status, '低电量');
-  assert.equal(entries[entries.length - 1].scene, '工作');
+  assert.equal(entries[entries.length - 1].scene, '工作/学习');
 
   const november = entries.filter((item) => item.date.slice(0, 7) === '2026-11');
   const october = entries.filter((item) => item.date.slice(0, 7) === '2026-10');

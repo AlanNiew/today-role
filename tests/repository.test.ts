@@ -24,7 +24,7 @@ test('同一天重复提交是更新，不新增记录', async () => {
   const created = await repository.upsertEntry({
     date: '2026-11-18',
     status: '紧绷',
-    scene: '工作',
+    scene: '工作/学习',
     note: '开会',
   });
   assert.equal(created.created, true);
@@ -53,10 +53,10 @@ test('同一天重复提交是更新，不新增记录', async () => {
 test('记录校验：日期 / 状态 / 场景 / 备注长度', async () => {
   const { repository } = makeRepo();
   await assert.rejects(() =>
-    repository.upsertEntry({ date: '2026-02-30', status: '平稳', scene: '工作' }),
+    repository.upsertEntry({ date: '2026-02-30', status: '平稳', scene: '工作/学习' }),
   );
   await assert.rejects(() =>
-    repository.upsertEntry({ date: '2026-11-18', status: '开心' as never, scene: '工作' }),
+    repository.upsertEntry({ date: '2026-11-18', status: '狂喜' as never, scene: '工作/学习' }),
   );
   await assert.rejects(() =>
     repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '公司' as never }),
@@ -65,14 +65,14 @@ test('记录校验：日期 / 状态 / 场景 / 备注长度', async () => {
     repository.upsertEntry({
       date: '2026-11-18',
       status: '平稳',
-      scene: '工作',
+      scene: '工作/学习',
       note: '字'.repeat(101),
     }),
   );
   const ok = await repository.upsertEntry({
     date: '2026-11-18',
     status: '平稳',
-    scene: '工作',
+    scene: '工作/学习',
     note: '字'.repeat(100),
   });
   assert.equal(ok.entry.note?.length, 100);
@@ -80,8 +80,8 @@ test('记录校验：日期 / 状态 / 场景 / 备注长度', async () => {
 
 test('列表按日期升序，replaceEntries 去重并清理缓存', async () => {
   const { repository } = makeRepo();
-  await repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '工作' });
-  await repository.upsertEntry({ date: '2026-11-16', status: '紧绷', scene: '工作' });
+  await repository.upsertEntry({ date: '2026-11-18', status: '平稳', scene: '工作/学习' });
+  await repository.upsertEntry({ date: '2026-11-16', status: '紧绷', scene: '工作/学习' });
   const sorted = await repository.listEntries();
   assert.deepEqual(
     sorted.map((item) => item.date),
@@ -111,7 +111,7 @@ test('清空数据删除前缀下全部键，不影响其他应用键', async ()
   await repository.upsertEntry({
     date: '2026-11-18',
     status: '平稳',
-    scene: '工作',
+    scene: '工作/学习',
     note: '私人内容',
   });
   await repository.setEntitlement(createMockProEntitlement('u_test', true));
@@ -143,7 +143,7 @@ test('导出 JSON 结构可读且包含记录 / 权益 / 快照', async () => {
   });
   await repository.setEntitlement(createMockProEntitlement('u_test', true));
   const bundle = await repository.exportAll();
-  assert.equal(bundle.schemaVersion, 1);
+  assert.equal(bundle.schemaVersion, 2);
   assert.equal(bundle.app, 'today-role');
   assert.equal(bundle.entries.length, 1);
   assert.equal(bundle.entitlement?.isPro, true);

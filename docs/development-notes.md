@@ -67,7 +67,7 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 一周从周一开始；周快照是「最近 7 天滚动窗口」，`weekStart` 只作缓存键，不等于自然周统计。
 - 同一用户同一天只有一条记录；重复提交是更新（保留 `createdAt`，刷新 `updatedAt`）。
 - 连续记录（streak）由 `core/stats.ts` 的 `currentStreak` 计算：从今天往回数，今天还没记录时从昨天开始数（不清零）；断一天即停止。只用于展示，不参与生成文案。
-- 状态参考值（兴奋 5 → 麻木 0）只用于排序与找模式，不是心理量表。
+- 状态参考值（0–7：兴奋 7 / 开心 6 / 平稳 5 / 紧绷 4 / 烦躁 3 / 低落 2 / 低电量 1 / 麻木 0）只用于排序与找模式，不是心理量表。排序本身是价值判断，改它会影响周/月「低点」结论。
 
 ## 6. 数据与存储
 
@@ -75,10 +75,12 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - `user` 键只在真正写入（记录 / 权益 / 演示数据）时落盘；只读场景（含导出）不会留下匿名 id。
 - 清空 = 按前缀物理删除所有键，随后不自动生成新记录。
 - 缓存裁剪：周快照保留 8 周、月卡保留 6 月（`core/repository/local.ts` 的 `pruneMap`）。
-- 导出包 `schemaVersion: 1`。**改数据结构时必须**：
+- 导出包 `schemaVersion: 2`（v1.1 起；v1.0 为 1）。**改数据结构时必须**：
   1. 递增导出 `schemaVersion`；
   2. 提供迁移/兼容读取（或更换 key 前缀并保留旧数据读取路径）；
   3. 补单测与 `docs/manual-test.md` 验收项。
+- 分类版本迁移：`core/migration.ts` + `LocalRepository` 启动钩子；`meta.taxonomyVersion` 幂等；迁移时清空 `weekly`/`monthly` 派生缓存。**迁移单向**：v1.1 之后回退 v1.0 代码会读不懂新场景值。
+- 场景改名历史：v1.0「工作/关系」→ v1.1「工作/学习/人际」，不要把旧值写回代码。
 
 ## 7. 切换点：本地/云端、规则/LLM
 
@@ -112,5 +114,5 @@ core/* 不得 import wx、pages 或 data 层；tests 只依赖 core
 - 没有页面级自动化 e2e（可评估 `miniprogram-automator`，但依赖开发者工具登录与服务端口）。
 - 月卡缓存只写不读（每次进入月卡页全量重算）；数据量小，暂不优化。
 - 历史记录只读，不支持补记 / 编辑过去日期（`upsertEntry` 本身支持任意日期，缺 UI 与产品决策）。
-- 没有存储 schema 迁移框架，仅靠 key 前缀 `v1` 与导出 `schemaVersion`。
+- 没有存储 schema 迁移框架，仅靠 key 前缀 `v1`、导出 `schemaVersion` 与 `meta.taxonomyVersion`。
 - Mock Pro 默认隐藏（本机解锁后才可见），无真实支付、订单、退款能力。

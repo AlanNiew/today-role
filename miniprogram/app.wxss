@@ -245,12 +245,12 @@ page {
   border-radius: 22rpx;
   box-sizing: border-box;
   display: flex;
-  flex: 1 1 28%;
+  flex: 1 1 21%;
   flex-direction: column;
   justify-content: center;
   margin: 7rpx;
-  min-height: 124rpx;
-  padding: 18rpx 8rpx;
+  min-height: 112rpx;
+  padding: 14rpx 6rpx;
   position: relative;
   transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
 }
@@ -291,6 +291,8 @@ page {
 .status-dot--excited { background: #d99a3d; }
 .status-dot--irritated { background: #b4635f; }
 .status-dot--numb { background: #948c7e; }
+.status-dot--joy { background: #e0a95a; }
+.status-dot--down { background: #8b7f9d; }
 
 .status-name {
   color: #38443c;
@@ -320,11 +322,12 @@ page {
   color: #536056;
   display: flex;
   flex: 1 1 0;
-  font-size: 26rpx;
+  font-size: 22rpx;
   justify-content: center;
   margin: 5rpx;
   min-height: 82rpx;
-  padding: 14rpx 4rpx;
+  padding: 14rpx 2rpx;
+  white-space: nowrap;
   transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
 }
 
@@ -597,6 +600,18 @@ page {
 
 .dist-row {
   margin-top: 20rpx;
+}
+
+/* v1.1 有 8 个状态：两列紧凑排布，避免月卡过长 */
+.distribution {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.distribution .dist-row {
+  margin-top: 16rpx;
+  width: 48%;
 }
 
 .dist-head {

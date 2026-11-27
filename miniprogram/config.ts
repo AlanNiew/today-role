@@ -16,5 +16,5 @@ export const APP_CONFIG: AppConfig = {
   dataMode: 'local',
   generatorMode: 'rule',
   storagePrefix: 'today-role.v1.',
-  appVersion: '1.0.0',
+  appVersion: '1.1.0',
 };

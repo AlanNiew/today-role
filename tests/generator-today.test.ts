@@ -11,18 +11,18 @@ function generate(entries: DailyEntry[], target: DailyEntry) {
 }
 
 test('今日碎片引用当天状态与场景，并带最近 7 天锚点', async () => {
-  const target = entry('2026-11-18', '紧绷', '工作');
+  const target = entry('2026-11-18', '紧绷', '工作/学习');
   const entries = [
-    entry('2026-11-12', '平稳', '工作'),
-    entry('2026-11-13', '紧绷', '工作'),
-    entry('2026-11-14', '紧绷', '工作'),
+    entry('2026-11-12', '平稳', '工作/学习'),
+    entry('2026-11-13', '紧绷', '工作/学习'),
+    entry('2026-11-14', '紧绷', '工作/学习'),
     entry('2026-11-15', '低电量', '身体'),
     target,
   ];
   const fragment = await generate(entries, target);
   assert.equal(fragment.date, '2026-11-18');
   assert.equal(fragment.label, '硬撑的协调者');
-  assert.ok(fragment.explanation.includes('「工作」'));
+  assert.ok(fragment.explanation.includes('「工作/学习」'));
   assert.ok(fragment.explanation.includes('「紧绷」'));
   assert.ok(fragment.explanation.includes('这个组合出现 3 天'));
   assert.ok(fragment.explanation.includes('共出现 3 天'));
@@ -33,9 +33,9 @@ test('今日碎片引用当天状态与场景，并带最近 7 天锚点', async
 });
 
 test('今日碎片不读取、不回显 note', async () => {
-  const target = entry('2026-11-18', '烦躁', '关系', '和同事吵了一架，很生气');
+  const target = entry('2026-11-18', '烦躁', '人际', '和同事吵了一架，很生气');
   const fragment = await generate([target], target);
-  assert.equal(fragment.label, '耐心告急的回应者');
+  assert.equal(fragment.label, '耐心在排队的回应者');
   assert.ok(!fragment.explanation.includes('同事'));
   assert.ok(!fragment.explanation.includes('生气'));
   assert.ok(fragment.explanation.includes('1 天'));

@@ -68,16 +68,21 @@
         <view class="section-title">状态分布</view>
         <view class="section-note">共 {{recordedDays}} 天</view>
       </view>
-      <view wx:for="{{distribution}}" wx:key="status" class="dist-row">
-        <view class="dist-head">
-          <view class="dist-name">
-            <view class="dist-dot" style="background: {{item.color}};"></view>
-            <text>{{item.status}}</text>
+      <view class="distribution">
+        <view wx:for="{{distribution}}" wx:key="status" class="dist-row">
+          <view class="dist-head">
+            <view class="dist-name">
+              <view class="dist-dot" style="background: {{item.color}};"></view>
+              <text>{{item.status}}</text>
+            </view>
+            <view>{{item.count}} 天 · {{item.percent}}%</view>
           </view>
-          <view>{{item.count}} 天 · {{item.percent}}%</view>
-        </view>
-        <view class="dist-track">
-          <view class="dist-fill" style="width: {{item.percent}}%; background: {{item.color}};"></view>
+          <view class="dist-track">
+            <view
+              class="dist-fill"
+              style="width: {{item.percent}}%; background: {{item.color}};"
+            ></view>
+          </view>
         </view>
       </view>
     </view>

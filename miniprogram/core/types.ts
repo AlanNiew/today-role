@@ -3,10 +3,10 @@
  * 这里只放纯数据定义，不依赖微信 API，便于 Node 单元测试。
  */
 
-export const STATUSES = ['平稳', '紧绷', '低电量', '兴奋', '烦躁', '麻木'] as const;
+export const STATUSES = ['兴奋', '开心', '紧绷', '烦躁', '平稳', '低落', '低电量', '麻木'] as const;
 export type Status = (typeof STATUSES)[number];
 
-export const SCENES = ['工作', '关系', '独处', '身体', '家庭'] as const;
+export const SCENES = ['工作/学习', '人际', '家庭', '独处', '身体'] as const;
 export type Scene = (typeof SCENES)[number];
 
 export type Plan = 'free' | 'mock_pro';

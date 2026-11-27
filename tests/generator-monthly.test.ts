@@ -10,15 +10,15 @@ const TODAY = new Date(2026, 10, 18);
 
 function novemberEntries() {
   return [
-    entry('2026-11-01', '紧绷', '工作'),
-    entry('2026-11-02', '紧绷', '工作'),
-    entry('2026-11-03', '烦躁', '工作'),
+    entry('2026-11-01', '紧绷', '工作/学习'),
+    entry('2026-11-02', '紧绷', '工作/学习'),
+    entry('2026-11-03', '烦躁', '工作/学习'),
     entry('2026-11-04', '平稳', '独处'),
     entry('2026-11-05', '兴奋', '独处'),
     entry('2026-11-06', '平稳', '家庭'),
-    entry('2026-11-07', '平稳', '关系'),
+    entry('2026-11-07', '平稳', '人际'),
     entry('2026-11-08', '低电量', '身体'),
-    entry('2026-11-09', '低电量', '工作'),
+    entry('2026-11-09', '低电量', '工作/学习'),
     entry('2026-11-10', '平稳', '独处'),
   ];
 }
@@ -61,7 +61,7 @@ test('满 10 天生成基础月卡：分布 / Top2 场景 / 张力 / 建议', as
   assert.equal(card.statusDistribution['紧绷'], 2);
   assert.equal(card.statusDistribution['兴奋'], 1);
   assert.equal(card.topScenes.length, 2);
-  assert.deepEqual(card.topScenes[0], { scene: '工作', count: 4 });
+  assert.deepEqual(card.topScenes[0], { scene: '工作/学习', count: 4 });
   assert.deepEqual(card.topScenes[1], { scene: '独处', count: 3 });
 
   assert.ok(card.tension);
@@ -76,8 +76,8 @@ test('满 10 天生成基础月卡：分布 / Top2 场景 / 张力 / 建议', as
 test('月卡只统计当月记录', async () => {
   const entries = [
     ...novemberEntries(),
-    entry('2026-10-31', '低电量', '工作'),
-    entry('2026-12-01', '低电量', '工作'),
+    entry('2026-10-31', '低电量', '工作/学习'),
+    entry('2026-12-01', '低电量', '工作/学习'),
   ];
   const result = await monthly(entries);
   assert.equal(result.ok, true);
@@ -92,11 +92,11 @@ test('月卡只统计当月记录', async () => {
 
 test('Pro 深度内容包含共现、历史对比与 3 条行动建议', async () => {
   const previous = [
-    entry('2026-10-20', '平稳', '工作'),
+    entry('2026-10-20', '平稳', '工作/学习'),
     entry('2026-10-21', '兴奋', '独处'),
     entry('2026-10-22', '平稳', '家庭'),
     entry('2026-10-23', '低电量', '身体'),
-    entry('2026-10-24', '紧绷', '工作'),
+    entry('2026-10-24', '紧绷', '工作/学习'),
   ];
   const entries = [...previous, ...novemberEntries()];
   const cardResult = await monthly(entries);
@@ -144,7 +144,7 @@ test('Pro 深度内容包含共现、历史对比与 3 条行动建议', async (
 });
 
 test('上月记录不足 3 天时明确说明无法对比', async () => {
-  const entries = [...novemberEntries(), entry('2026-10-01', '平稳', '工作')];
+  const entries = [...novemberEntries(), entry('2026-10-01', '平稳', '工作/学习')];
   const cardResult = await monthly(entries);
   assert.equal(cardResult.ok, true);
   if (!cardResult.ok) {

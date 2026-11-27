@@ -17,11 +17,13 @@ interface SceneRow extends SceneCount {
 }
 
 const STATUS_COLORS: Record<Status, string> = {
-  平稳: '#5f8a6e',
-  紧绷: '#c17a58',
-  低电量: '#6f87a6',
   兴奋: '#d99a3d',
+  开心: '#e0a95a',
+  紧绷: '#c17a58',
   烦躁: '#b4635f',
+  平稳: '#5f8a6e',
+  低落: '#8b7f9d',
+  低电量: '#6f87a6',
   麻木: '#948c7e',
 };
 

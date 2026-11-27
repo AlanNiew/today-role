@@ -7,7 +7,7 @@ import { STATUSES } from '../miniprogram/core/types';
 import type { Scene, Status } from '../miniprogram/core/types';
 
 const STATUS_ROTATION: Status[] = ['平稳', '紧绷', '低电量', '烦躁', '兴奋', '麻木'];
-const SCENE_ROTATION: Scene[] = ['工作', '工作', '关系', '独处', '身体', '家庭'];
+const SCENE_ROTATION: Scene[] = ['工作/学习', '工作/学习', '人际', '独处', '身体', '家庭'];
 
 test('端到端主流程：记录 → 今日碎片 → 周快照 → 月卡 → Pro → 导出 → 清空', async () => {
   let clock = 1_800_000_000_000;
@@ -35,7 +35,7 @@ test('端到端主流程：记录 → 今日碎片 → 周快照 → 月卡 → 
   const updated = await repository.upsertEntry({
     date: '2026-11-18',
     status: '低电量',
-    scene: '工作',
+    scene: '工作/学习',
     note: '今天有点忙',
   });
   assert.equal(updated.created, false);
@@ -46,7 +46,7 @@ test('端到端主流程：记录 → 今日碎片 → 周快照 → 月卡 → 
   const todayEntry = await repository.getEntry('2026-11-18');
   assert.ok(todayEntry);
   const fragment = await generator.generateTodayFragment({ entry: todayEntry, entries });
-  assert.ok(fragment.explanation.includes('「工作」'));
+  assert.ok(fragment.explanation.includes('「工作/学习」'));
   assert.ok(fragment.explanation.includes('「低电量」'));
 
   const weekly = await generator.generateWeeklySnapshot({
