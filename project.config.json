@@ -2,7 +2,7 @@
   "description": "今日角色小程序项目配置",
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "appid": "wx32d9039656d150d3",
+  "appid": "wxa1ec97c3aece4bea",
   "projectname": "today-role",
   "libVersion": "3.7.12",
   "setting": {
